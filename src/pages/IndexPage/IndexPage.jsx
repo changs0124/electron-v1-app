@@ -8,7 +8,7 @@ import InOutPutBox from '../../components/InOutPutBox/InOutPutBox';
 import GraphBox from '../../components/GraphBox/GraphBox';
 import ViewerBox from '../../components/ViewerBox/ViewerBox';
 import Loading from '../../components/Loading/Loading';
-import { exeStatusAtom, inputModalStatusAtom, tabStatusAtom } from '../../atoms/statusAtoms';
+import { exeStatusAtom, tabStatusAtom } from '../../atoms/statusAtoms';
 
 function IndexPage() {
     const tabStatus = useRecoilValue(tabStatusAtom);

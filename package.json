@@ -2,6 +2,7 @@
   "name": "electron-v1-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "main": "public/electron.js",
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -32,7 +33,9 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
     "electron": "^30.0.0",
+    "electron-builder": "^26.0.12",
     "wait-on": "^7.0.1"
   },
   "scripts": {
@@ -61,13 +64,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "concurrently": "^9.1.2",
-    "cross-env": "^7.0.3",
-    "electron": "^36.2.0",
-    "electron-builder": "^26.0.12",
-    "wait-on": "^8.0.3"
   },
   "build": {
     "appId": "com.electronApp.app",

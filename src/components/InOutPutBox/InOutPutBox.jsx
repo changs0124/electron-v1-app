@@ -92,7 +92,6 @@ function InOutPutBox() {
     })
 
     useEffect(() => {
-
         if (info.isError) {
             setExeStatus(true);
             setPollingCount(prev => prev + 1)
@@ -115,7 +114,6 @@ function InOutPutBox() {
     }, [info.isFetching, info.isError, info.isSuccess]);
 
     useEffect(() => {
-
         if (pollingCount > 10) {
             window.electronAPI.showAlert('exe 실행 실패');
             setPollingStatus(true)
@@ -224,10 +222,9 @@ function InOutPutBox() {
                             <p>DATA TABLE</p>
                             <div css={s.iconBox} onClick={handleSaveCSVOnClick}><IoMdDownload /></div>
                         </div>
-                        <OutputTableBox outputDatas={outputDatas} />
+                        <OutputTableBox outputDatas={outputDatas} isSuccess={info.isSuccess}/>
                     </div>
                 </div>
-
             }
         </>
     );

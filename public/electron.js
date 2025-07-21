@@ -1,14 +1,12 @@
 const { BrowserWindow, app, ipcMain, dialog } = require("electron");
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
-const net = require('net');
 const fs = require('fs');
 const { spawn } = require('child_process');
 
 const isDev = !app.isPackaged;
 let mainWindow;
 let serverProcesses = {};
-
 
 function getPortAndIdByExeKey(exeName, exeList) {
     const temp = exeList.find(c => c.key === exeName);
@@ -32,7 +30,7 @@ function createWindow() {
 
     const entryURL = isDev
         ? "http://localhost:3000"
-        : `file://${path.join(__dirname, "../build/index.html")}`;
+        : `file://${path.join(app.getAppPath(), "build/index.html")}`;
 
     mainWindow.loadURL(entryURL)
         .catch(err => console.error("Failed to load URL:", err));
@@ -164,25 +162,7 @@ ipcMain.handle("render-stl", async (event, filePath, fileName) => {
     }
 });
 
-ipcMain.handle('show-dialog', async (event, arg) => {
-    const webContents = event.sender;
-    const win = BrowserWindow.fromWebContents(webContents);
-
-    const options = {
-        type: 'info',
-        buttons: ['확인'],
-        title: '알림',
-        message: arg.message,
-    };
-
-    // 네이티브 알림창을 띄우고, 사용자의 선택(응답)을 기다립니다.
-    const result = await dialog.showMessageBox(mainWindow, options);
-
-    // 결과를 렌더러 프로세스로 반환합니다.
-    return result.response;
-});
-
-ipcMain.handle('showAlert', async (event, message) => {
+ipcMain.handle('showAlert', async (event, type, message) => {
     const options = {
         type: 'info',
         title: '알림',

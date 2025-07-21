@@ -14,7 +14,7 @@ function InputTableBox({ parameters, inputData, setInputData, inputDatas, isSucc
     return (
         <div css={s.layout}>
             {
-                (isSuccess && serverId === 1) &&
+                serverId === 1 &&
                 <table css={s.tableStyle}>
                     <thead>
                         <tr>
@@ -41,7 +41,7 @@ function InputTableBox({ parameters, inputData, setInputData, inputDatas, isSucc
                 </table>
             }
             {
-                (isSuccess && serverId === 2) &&
+                serverId === 2  &&
                 <table css={s.tableStyle}>
                     <tbody>
                         {
