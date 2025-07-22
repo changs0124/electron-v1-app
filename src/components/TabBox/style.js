@@ -9,9 +9,9 @@ export const layout = (value, tabId) => css`
     border: 2px solid #dbdbdb;
     border-radius: 15px;
     width: 100%;
-    min-height: 100px;
-    cursor: pointer;
+    min-height: 90px;
     background-color: ${value === tabId ? "#666666" : 'transparent'};
+    cursor: pointer;
 
     :hover {
         border: 2px solid #666666;

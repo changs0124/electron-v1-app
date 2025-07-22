@@ -8,6 +8,7 @@ export const layout = css`
     align-items: center;
     width: 100%;
     height: 100%;
+    backdrop-filter: blur(10px);
     z-index: 999;
 `;
 

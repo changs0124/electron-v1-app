@@ -38,7 +38,7 @@ export const pollingCountAtom = atomFamily({
     effects_UNSTABLE: [persistAtom]
 });
 
-// reactQuery - info: grap에 필요한 정보
+// reactQuery - info: graph에 필요한 정보
 export const graphInfoAtom = atomFamily({
     key: 'graphInfoAtom',
     default: {}
@@ -53,10 +53,7 @@ export const indexAtom = atomFamily({
 // Coil-Stl
 export const selectedCoilStlAtom = atomFamily({
     key: "selectedCoilStlAtom",
-    default: {
-        filePath: "",
-        fileName: ""
-    },
+    default: {},
     effects_UNSTABLE: [persistAtom]
 });
 
@@ -70,10 +67,7 @@ export const coilUrlAtom = atomFamily({
 // Core-Stl
 export const selectedCoreStlAtom = atomFamily({
     key: "selectedCoreStlAtom",
-    default: {
-        filePath: "",
-        fileName: ""
-    },
+    default: {},
     effects_UNSTABLE: [persistAtom]
 });
 

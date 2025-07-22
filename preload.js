@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld('electronAPI', {    //  보안: 컨텍스트 격
 
     selectStl: () => ipcRenderer.invoke("select-stl"),
 
-    renderStl: (filePath, fileName) => ipcRenderer.invoke("render-stl", filePath, fileName),
+    renderStl: (filePath) => ipcRenderer.invoke("render-stl", filePath),
 
     showAlert: (message) => ipcRenderer.invoke('showAlert', message)
 });

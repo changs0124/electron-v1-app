@@ -1,4 +1,4 @@
-const { BrowserWindow, app, ipcMain, dialog } = require("electron");
+const { BrowserWindow, app, ipcMain, dialog } = require('electron');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const fs = require('fs');
@@ -8,10 +8,11 @@ const isDev = !app.isPackaged;
 let mainWindow;
 let serverProcesses = {};
 
+console.log(serverProcesses)
 function getPortAndIdByExeKey(exeName, exeList) {
     const temp = exeList.find(c => c.key === exeName);
     return temp ? { port: temp.port, id: temp.id } : null;
-}
+};
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -21,31 +22,28 @@ function createWindow() {
         resizable: false,
         focusable: true,
         webPreferences: {
-            preload: path.join(__dirname, "../preload.js"),
+            preload: path.join(__dirname, '../preload.js'),
             contextIsolation: true,
             nodeIntegration: false,
-            sandbox: true,
-        },
+            sandbox: true
+        }
     });
 
-    const entryURL = isDev
-        ? "http://localhost:3000"
-        : `file://${path.join(app.getAppPath(), "build/index.html")}`;
+    const entryURL = isDev ? 'http://localhost:3000' : `file://${path.join(app.getAppPath(), "build/index.html")}`;
 
-    mainWindow.loadURL(entryURL)
-        .catch(err => console.error("Failed to load URL:", err));
-}
+    mainWindow.loadURL(entryURL).catch(err => console.error('Failed to load URL:', err));
+};
 
 app.whenReady().then(createWindow);
 
-app.on("window-all-closed", () => {
+app.on('window-all-closed', () => {
     if (process.platform !== "darwin") app.quit();
 });
 
-ipcMain.handle("save-csv", async (event, jsonArray) => { // ipcMain.handle : render에서 invoke로 호출 가능한 비동기 함수를 등록하는 메소드.
+ipcMain.handle('save-csv', async (event, jsonArray) => { // ipcMain.handle : render에서 invoke로 호출 가능한 비동기 함수를 등록하는 메소드.
     if (!Array.isArray(jsonArray) || jsonArray.length === 0) { // 데이터가 배열인지, 혹은 비어있는지 체크.
-        return { success: false, error: "Invalid or empty data" };
-    }
+        return { success: false, error: 'Invalid or empty data' };
+    };
 
     const headers = Object.keys(jsonArray[0]); // keys만 추출
     const rows = jsonArray.map(obj => headers.map(key => obj[key])); // 추출한 key값들에 대한 value만 추출출
@@ -58,46 +56,41 @@ ipcMain.handle("save-csv", async (event, jsonArray) => { // ipcMain.handle : ren
     const filename = `${dateStr}_${uuidv4().slice(0, 8)}.csv`; // uuidv4 불특정한 숫자문자열에서 8번째까지 잘라서 사용용
 
     const { canceled, filePath } = await dialog.showSaveDialog({ // 저장 다이얼로그 창
-        title: "CSV 파일 저장",
-        defaultPath: path.join(app.getPath("downloads"), filename),
-        filters: [{ name: "CSV Files", extensions: ["csv"] }],
+        title: 'Save CSV file',
+        defaultPath: path.join(app.getPath('downloads'), filename),
+        filters: [{ name: 'CSV Files', extensions: ['csv'] }]
     });
 
-    if (canceled || !filePath) return { success: false };
+    if (canceled || !filePath) return { success: false, error: 'File selection cancelled' };
 
     try {
-        fs.writeFileSync(filePath, csvContent, "utf8"); // 파일쓰기 메소드.
+        fs.writeFileSync(filePath, csvContent, 'utf8'); // 파일쓰기 메소드.
         return { success: true, filePath };
-    } catch (error) {
-        console.error("파일 저장 실패: ", error);
-        return { success: false, error: error.message };
-    }
+    } catch (e) {
+        return { success: false, error: e.message };
+    };
 });
 
 ipcMain.handle('select-and-start-server', async (event, exeList) => {
     // 1) .exe 파일 선택
     const { canceled, filePaths } = await dialog.showOpenDialog({
-        title: '서버 실행용 .exe 선택',
+        title: 'Please select the .exe file',
         properties: ['openFile'],
-        filters: [{ name: 'Executable', extensions: ['exe'] }],
-    });
-    if (canceled || !filePaths.length) {
-        return { success: false, error: '파일 선택 취소' };
-    }
+        filters: [{ name: 'Executable', extensions: ['exe'] }]
+    })
+
+    if (canceled || !filePaths.length) return { success: false, error: 'File selection cancelled' };
+
     const exePath = filePaths[0];
     const fileName = path.basename(exePath);
 
     // 허용 목록에 있는지 체크
     const serverInfo = getPortAndIdByExeKey(fileName, exeList);
-    if (serverInfo === null) {
-        return { success: false, error: `허용되지 않은 파일입니다: ${fileName}` }
-    }
+    if (serverInfo === null) return { success: false, error: `This file is not allowed: ${fileName}` };
 
     // 2) 이미 실행 중인지 확인
     const existing = serverProcesses[exePath];
-    if (existing && !existing.killed) {
-        return { success: false, error: '이미 실행 중인 서버입니다.', fileName, id: serverInfo.id, port: serverInfo.port };
-    }
+    if (existing && !existing.killed) return { success: false, error: 'The server is already running.', fileName, id: serverInfo.id, port: serverInfo.port };
 
     // 3) 새 프로세스 실행 (콘솔 창 없이)
     try {
@@ -111,65 +104,50 @@ ipcMain.handle('select-and-start-server', async (event, exeList) => {
         cp.unref();
 
         // 프로세스 종료 시 맵에서 제거
-        cp.on('exit', () => {
-            delete serverProcesses[exePath];
-        });
+        cp.on('exit', () => { delete serverProcesses[exePath]; });
 
         serverProcesses[exePath] = cp;
 
         return { success: true, fileName, exePath, id: serverInfo.id, port: serverInfo.port };
-    } catch (err) {
-        return { success: false, error: err.message, fileName };
-    }
+    } catch (e) {
+        return { success: false, error: e.message, fileName };
+    };
 });
 
 // [ 기능 2 ] .stl 파일명 / 파일 경로 리턴
-ipcMain.handle("select-stl", async () => {
+ipcMain.handle('select-stl', async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
-        filters: [{ name: "STL Files", extensions: ["stl"] }],
-        properties: ["openFile"]
+        filters: [{ name: 'STL Files', extensions: ['stl'] }],
+        properties: ['openFile']
     })
 
-    if (canceled || filePaths.length === 0) return null;
+    if (canceled || filePaths.length === 0) return { success: false, error: 'File selection cancelled' };
 
     const filePath = filePaths[0];
     const fileName = path.basename(filePath);
-    return { filePath, fileName };
+
+    return { success: true, fileName, filePath }
 });
 
 // [ 기능 3 ] .stl 렌더링
-ipcMain.handle("render-stl", async (event, filePath, fileName) => {
-    const tempDir = isDev
-        ? path.join(app.getAppPath(), "public/temp-stl")
-        : path.join(app.getPath("userData"), "temp-stl");
-
-    const tempPath = path.join(tempDir, fileName);
-
+ipcMain.handle('render-stl', async (event, filePath) => {
     try {
-        if (!fs.existsSync(tempDir)) {
-            fs.mkdirSync(tempDir, { recursive: true });
-        }
-
-        fs.copyFileSync(filePath, tempPath);
-
-        const fileBuffer = fs.readFileSync(tempPath);
+        const fileBuffer = fs.readFileSync(filePath);
 
         return fileBuffer;
-
     } catch (e) {
-        console.error(e);
-        throw e;
+        return { success: false, error: e.message };
     }
 });
 
-ipcMain.handle('showAlert', async (event, type, message) => {
+// [ 기능 4 ] custom alertBox
+ipcMain.handle('showAlert', async (event, message) => {
     const options = {
         type: 'info',
-        title: '알림',
-        message: message, // 렌더러에서 보낸 문자열 사용
-        buttons: ['확인'],
+        title: 'Inform',
+        message: message
     };
-    // 다이얼로그를 띄우고 사용자가 버튼을 누르면 결과를 반환
+
     const result = await dialog.showMessageBox(mainWindow, options);
     return result.response;
 });

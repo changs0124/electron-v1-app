@@ -8,7 +8,7 @@ export const layout = css`
     margin-right: 10px;
     border-radius: 15px;
     padding: 10px;
-    width: 15%;
+    min-width: 10%;
     background-color: #ffffff;
 `;
 
@@ -21,7 +21,7 @@ export const addBox = css`
     border: 2px solid #dbdbdb;
     border-radius: 15px;
     width: 100%;
-    min-height: 100px;
+    min-height: 90px;
     cursor: pointer;
 
     & > svg {

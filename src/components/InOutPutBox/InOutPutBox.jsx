@@ -43,7 +43,7 @@ function InOutPutBox() {
         retry: false,
         refetchOnWindowFocus: true,
         refetchIntervalInBackground: false,
-        refetchInterval: pollingStatus ? false : 5000,
+        refetchInterval: pollingStatus ? false : 5000
     })
 
     const input = useQuery({
@@ -54,8 +54,8 @@ function InOutPutBox() {
                 return res?.data
             })
             .catch(err => {
-                window.electronAPI.showAlert('조회할 데이터가 없습니다.');
-                setIndex(1);
+                window.electronAPI.showAlert('There is no data to retrieve.')
+                setIndex(1)
                 return err
             }),
         enabled: inputStatus,
@@ -67,11 +67,11 @@ function InOutPutBox() {
         mutationFn: () => instance(serverInfo?.port).post('/predict', inputData),
         onSuccess: async (res) => {
             setOutputDatas(prev => [...prev, res?.data])
-            await window.electronAPI.showAlert('예측 성공');
+            await window.electronAPI.showAlert('Prediction success')
         },
         onError: async (err) => {
-            const errorMessage = `예측 실패: ${err?.message || '알 수 없는 오류'}`;
-            await window.electronAPI.showAlert(errorMessage);
+            const errorMessage = `Prediction failed: ${err?.message || 'Unknown error'}`
+            await window.electronAPI.showAlert(errorMessage)
         }
     })
 
@@ -81,41 +81,41 @@ function InOutPutBox() {
             setInputDatas(prev => [...prev, variables])
             setOutputDatas(prev => [...prev, res?.data])
 
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            await new Promise(resolve => setTimeout(resolve, 3000))
 
             setIndex(prev => prev + 1)
         },
         onError: async () => {
-            setInputSattus(false);
-            await window.electronAPI.showAlert('데이터 처리 중 오류가 발생했습니다.');
+            setInputSattus(false)
+            await window.electronAPI.showAlert('An error occurred while processing data.')
         }
     })
 
     useEffect(() => {
         if (info.isError) {
-            setExeStatus(true);
+            setExeStatus(true)
             setPollingCount(prev => prev + 1)
             return
-        }
+        };
 
         if (info.isFetching) {
-            setExeStatus(true);
+            setExeStatus(true)
             return
-        }
+        };
 
         if (info.isSuccess) {
             setPollingStatus(true)
-            setExeStatus(false);
-            setGraphInfo(info?.data?.graph);
+            setExeStatus(false)
+            setGraphInfo(info?.data?.graph)
             setPollingCount(0)
             return
-        }
+        };
 
-    }, [info.isFetching, info.isError, info.isSuccess]);
+    }, [info.isFetching, info.isError, info.isSuccess])
 
     useEffect(() => {
         if (pollingCount > 10) {
-            window.electronAPI.showAlert('exe 실행 실패');
+            window.electronAPI.showAlert('Exe execution failed')
             setPollingStatus(true)
             setExeStatus(false)
             setPollingCount(0)
@@ -127,23 +127,24 @@ function InOutPutBox() {
 
     const handleSelectServerOnClick = async () => {
         if (serverId === 1) {
-            const res = await window.electronAPI.selectServer(ROM_EXE_CONSTANTS);
-            
+            const res = await window.electronAPI.selectServer(ROM_EXE_CONSTANTS)
+
             if (res.success) {
                 setServerInfo({
                     id: res?.id,
                     port: res?.port
                 })
-            } else if (res?.error === '이미 실행 중인 서버입니다.') {
-                await window.electronAPI.showAlert(res?.error);
+            } else if (res?.error === 'The server is already running.') {
+                console.log(res?.error);
+                await window.electronAPI.showAlert(res?.error)
                 setServerInfo({
                     id: res?.id,
                     port: res?.port
                 })
             } else {
-                await window.electronAPI.showAlert(`${res?.error}`);
-            }
-        }
+                await window.electronAPI.showAlert(`${res?.error}`)
+            };
+        };
 
         if (serverId === 2) {
             const res = await window.electronAPI.selectServer(ROM_PINN_EXE_CONSTANTS);
@@ -153,36 +154,31 @@ function InOutPutBox() {
                     id: res?.id,
                     port: res?.port
                 })
-            } else if (res?.error === '이미 실행 중인 서버입니다.') {
+            } else if (res?.error === 'The server is already running.') {
                 await window.electronAPI.showAlert(res?.error);
                 setServerInfo({
                     id: res?.id,
                     port: res?.port
-                })
+                });
             } else {
-                await window.electronAPI.showAlert(`${res?.error}`);
+                await window.electronAPI.showAlert(`${res?.error}`)
             }
         }
     };
 
     const handleSaveCSVOnClick = async () => {
-        if (!outputDatas?.length) {
-            window.electronAPI.showAlert('저장할 데이터 없음');
-            return
-        }
-
-        const res = await window.electronAPI.saveCSV(outputDatas);
+        const res = await window.electronAPI.saveCSV(outputDatas)
 
         if (res.success) {
-            await window.electronAPI.showAlert(`저장 완료: ${res.filePath}`);
+            await window.electronAPI.showAlert(`Save completed: ${res.filePath}`)
         } else {
-            await window.electronAPI.showAlert('저장 실패');
-        }
-    }
+            await window.electronAPI.showAlert(res.error)
+        };
+    };
 
     const handleSetInputStatusOnClick = () => {
         setInputSattus(!inputStatus)
-    }
+    };
 
     return (
         <>
