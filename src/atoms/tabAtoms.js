@@ -8,19 +8,19 @@ export const tabIdAtom = atom({
     key: "tabIdAtom",
     default: "",
     effects_UNSTABLE: [persistAtom]
-});
+})
 
 // tabs를 나열하기 위한 상태
 export const tabsAtom = atom({
     key: "tabsAtom",
     default: [],
     effects_UNSTABLE: [persistAtom]
-});
+})
 
 // 각 tab의 serverId를 위한 상태
 export const tabServerIdAtom = atomFamily({
     key: 'tabServerIdAtom',
     default: 0,
     effects_UNSTABLE: [persistAtom]
-});
+})
 

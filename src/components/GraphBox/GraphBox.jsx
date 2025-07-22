@@ -23,7 +23,7 @@ function GraphBox() {
 
         let maxYValue = 0;
 
-        const dataKeys = Object.keys(outputDatas[0])
+        const dataKeys = Object.keys(outputDatas[0]);
         const dataIndices = Object.keys(outputDatas).filter(key => !isNaN(Number(key)));
 
         const xValues = dataIndices?.map(key => Number(key) + 1);
@@ -46,7 +46,7 @@ function GraphBox() {
                 marker: { color: lineColor, size: 8 },
                 line: { color: lineColor, width: 3 },
                 name: keyName
-            };
+            }
         });
 
         const yAxisMax = maxYValue > 0 ? maxYValue * 1.1 : 1;
@@ -64,7 +64,7 @@ function GraphBox() {
                 x: 1.02,
                 xanchor: 'left',
                 y: 1,
-            },
+            }
         };
 
         setTempPlotData(plotTraces)

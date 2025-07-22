@@ -14,27 +14,26 @@ import { ROM_EXE_CONSTANTS, ROM_PINN_EXE_CONSTANTS } from '../../constants/ExeCo
 import { exeStatusAtom, inputStatusAtom, pollingStatusAtom } from '../../atoms/statusAtoms';
 
 function InOutPutBox() {
-    const [isRpHovered, setIsRpHovered] = useState(false);
+    const [isRpHovered, setIsRpHovered] = useState(false); // useState 호출 뒤에 세미콜론
 
-    const tabs = useRecoilValue(tabsAtom);
-    const tabId = useRecoilValue(tabIdAtom);
-    const serverId = useRecoilValue(tabServerIdAtom(tabId));
-    const [serverInfo, setServerInfo] = useRecoilState(serverInfoAtom(tabId));
+    const tabs = useRecoilValue(tabsAtom); // useRecoilValue 호출 뒤에 세미콜론
+    const tabId = useRecoilValue(tabIdAtom); // useRecoilValue 호출 뒤에 세미콜론
+    const serverId = useRecoilValue(tabServerIdAtom(tabId)); // useRecoilValue 호출 뒤에 세미콜론
 
-    const setGraphInfo = useSetRecoilState(graphInfoAtom(tabId));
+    const setGraphInfo = useSetRecoilState(graphInfoAtom(tabId)); // useSetRecoilState 호출 뒤에 세미콜론
 
-    const [inputData, setInputData] = useRecoilState(inputDataAtom(tabId));
-    const [inputDatas, setInputDatas] = useRecoilState(inputDatasAtom(tabId));
-    const [outputDatas, setOutputDatas] = useRecoilState(outPutDatasAtom(tabId));
+    const [serverInfo, setServerInfo] = useRecoilState(serverInfoAtom(tabId)); // useRecoilState 호출 뒤에 세미콜론
 
-    const [index, setIndex] = useRecoilState(indexAtom(tabId));
+    const [inputData, setInputData] = useRecoilState(inputDataAtom(tabId)); // useRecoilState 호출 뒤에 세미콜론
+    const [inputDatas, setInputDatas] = useRecoilState(inputDatasAtom(tabId)); // useRecoilState 호출 뒤에 세미콜론
+    const [outputDatas, setOutputDatas] = useRecoilState(outPutDatasAtom(tabId)); // useRecoilState 호출 뒤에 세미콜론
 
-    const [inputStatus, setInputSattus] = useRecoilState(inputStatusAtom(tabId));
+    const [index, setIndex] = useRecoilState(indexAtom(tabId)); // useRecoilState 호출 뒤에 세미콜론
 
-    const [exeStatus, setExeStatus] = useRecoilState(exeStatusAtom(tabId));
-
-    const [pollingStatus, setPollingStatus] = useRecoilState(pollingStatusAtom(tabId));
-    const [pollingCount, setPollingCount] = useRecoilState(pollingCountAtom(tabId));
+    const [inputStatus, setInputSattus] = useRecoilState(inputStatusAtom(tabId)); // useRecoilState 호출 뒤에 세미콜론
+    const [exeStatus, setExeStatus] = useRecoilState(exeStatusAtom(tabId)); // useRecoilState 호출 뒤에 세미콜론
+    const [pollingStatus, setPollingStatus] = useRecoilState(pollingStatusAtom(tabId)); // useRecoilState 호출 뒤에 세미콜론
+    const [pollingCount, setPollingCount] = useRecoilState(pollingCountAtom(tabId)); // useRecoilState 호출 뒤에 세미콜론
 
     const info = useQuery({
         queryKey: ['info', serverInfo],
@@ -44,107 +43,104 @@ function InOutPutBox() {
         refetchOnWindowFocus: true,
         refetchIntervalInBackground: false,
         refetchInterval: pollingStatus ? false : 5000
-    })
+    }); // useQuery 호출 뒤에 세미콜론
 
     const input = useQuery({
         queryKey: ["input", index],
         queryFn: () => inputInstance.get(`/input/${index}`)
             .then(res => {
-                predictTemp.mutateAsync(res?.data)
-                return res?.data
+                predictTemp.mutateAsync(res?.data); // 실행문 뒤에 세미콜론
+                return res?.data; // return 문 뒤에 세미콜론
             })
             .catch(err => {
-                window.electronAPI.showAlert('There is no data to retrieve.')
-                setIndex(1)
-                return err
+                window.electronAPI.showAlert('There is no data to retrieve.'); // 실행문 뒤에 세미콜론
+                setIndex(1); // 실행문 뒤에 세미콜론
+                return err; // return 문 뒤에 세미콜론
             }),
         enabled: inputStatus,
         refetchOnWindowFocus: false,
         retry: 0
-    })
+    }); // useQuery 호출 뒤에 세미콜론
 
     const predictSOC = useMutation({
         mutationFn: () => instance(serverInfo?.port).post('/predict', inputData),
         onSuccess: async (res) => {
-            setOutputDatas(prev => [...prev, res?.data])
-            await window.electronAPI.showAlert('Prediction success')
+            setOutputDatas(prev => [...prev, res?.data]); // 실행문 뒤에 세미콜론
+            await window.electronAPI.showAlert('Prediction success'); // await 표현식 뒤에 세미콜론
         },
         onError: async (err) => {
-            const errorMessage = `Prediction failed: ${err?.message || 'Unknown error'}`
-            await window.electronAPI.showAlert(errorMessage)
+            await window.electronAPI.showAlert(`Prediction failed: ${err?.message || 'Unknown error'}`); // await 표현식 뒤에 세미콜론
         }
-    })
+    }); // useMutation 호출 뒤에 세미콜론
 
     const predictTemp = useMutation({
         mutationFn: (data) => instance(serverInfo?.port).post('/predict', data),
         onSuccess: async (res, variables) => {
-            setInputDatas(prev => [...prev, variables])
-            setOutputDatas(prev => [...prev, res?.data])
+            setInputDatas(prev => [...prev, variables]); // 실행문 뒤에 세미콜론
+            setOutputDatas(prev => [...prev, res?.data]); // 실행문 뒤에 세미콜론
 
-            await new Promise(resolve => setTimeout(resolve, 3000))
-
-            setIndex(prev => prev + 1)
+            await new Promise(resolve => setTimeout(resolve, 3000)); // await 표현식 뒤에 세미콜론
+            setIndex(prev => prev + 1); // 실행문 뒤에 세미콜론
         },
         onError: async () => {
-            setInputSattus(false)
-            await window.electronAPI.showAlert('An error occurred while processing data.')
+            setInputSattus(false); // 실행문 뒤에 세미콜론
+            await window.electronAPI.showAlert('An error occurred while processing data.'); // await 표현식 뒤에 세미콜론
         }
-    })
+    }); // useMutation 호출 뒤에 세미콜론
 
     useEffect(() => {
         if (info.isError) {
-            setExeStatus(true)
-            setPollingCount(prev => prev + 1)
-            return
-        };
+            setExeStatus(true); // 실행문 뒤에 세미콜론
+            setPollingCount(prev => prev + 1); // 실행문 뒤에 세미콜론
+            return; // return 문 뒤에 세미콜론
+        }
 
         if (info.isFetching) {
-            setExeStatus(true)
-            return
-        };
+            setExeStatus(true); // 실행문 뒤에 세미콜론
+            return; // return 문 뒤에 세미콜론
+        }
 
         if (info.isSuccess) {
-            setPollingStatus(true)
-            setExeStatus(false)
-            setGraphInfo(info?.data?.graph)
-            setPollingCount(0)
-            return
-        };
+            setPollingStatus(true); // 실행문 뒤에 세미콜론
+            setExeStatus(false); // 실행문 뒤에 세미콜론
+            setGraphInfo(info?.data?.graph); // 실행문 뒤에 세미콜론
+            setPollingCount(0); // 실행문 뒤에 세미콜론
+            return; // return 문 뒤에 세미콜론
+        }
 
-    }, [info.isFetching, info.isError, info.isSuccess])
+    }, [info.isFetching, info.isError, info.isSuccess]); // useEffect 호출 뒤에 세미콜론
 
     useEffect(() => {
         if (pollingCount > 10) {
-            window.electronAPI.showAlert('Exe execution failed')
-            setPollingStatus(true)
-            setExeStatus(false)
-            setPollingCount(0)
-            setServerInfo({})
-            return
+            window.electronAPI.showAlert('Exe execution failed'); // 실행문 뒤에 세미콜론
+            setPollingStatus(true); // 실행문 뒤에 세미콜론
+            setExeStatus(false); // 실행문 뒤에 세미콜론
+            setPollingCount(0); // 실행문 뒤에 세미콜론
+            setServerInfo({}); // 실행문 뒤에 세미콜론
+            return; // return 문 뒤에 세미콜론
         }
 
-    }, [pollingCount])
+    }, [pollingCount]); // useEffect 호출 뒤에 세미콜론
 
     const handleSelectServerOnClick = async () => {
         if (serverId === 1) {
-            const res = await window.electronAPI.selectServer(ROM_EXE_CONSTANTS)
+            const res = await window.electronAPI.selectServer(ROM_EXE_CONSTANTS); // await 표현식 뒤에 세미콜론
 
             if (res.success) {
                 setServerInfo({
                     id: res?.id,
                     port: res?.port
-                })
+                }); // 객체 리터럴이 포함된 실행문 뒤에 세미콜론
             } else if (res?.error === 'The server is already running.') {
-                console.log(res?.error);
-                await window.electronAPI.showAlert(res?.error)
+                await window.electronAPI.showAlert(res?.error); // await 표현식 뒤에 세미콜론
                 setServerInfo({
                     id: res?.id,
                     port: res?.port
-                })
+                }); // 객체 리터럴이 포함된 실행문 뒤에 세미콜론
             } else {
-                await window.electronAPI.showAlert(`${res?.error}`)
-            };
-        };
+                await window.electronAPI.showAlert(`${res?.error}`); // await 표현식 뒤에 세미콜론
+            }; // if/else 블록의 마지막이지만, 문장 전체의 끝이므로 세미콜론
+        }; // if 블록의 마지막이지만, 문장 전체의 끝이므로 세미콜론
 
         if (serverId === 2) {
             const res = await window.electronAPI.selectServer(ROM_PINN_EXE_CONSTANTS);
@@ -153,7 +149,7 @@ function InOutPutBox() {
                 setServerInfo({
                     id: res?.id,
                     port: res?.port
-                })
+                });
             } else if (res?.error === 'The server is already running.') {
                 await window.electronAPI.showAlert(res?.error);
                 setServerInfo({
@@ -161,24 +157,24 @@ function InOutPutBox() {
                     port: res?.port
                 });
             } else {
-                await window.electronAPI.showAlert(`${res?.error}`)
+                await window.electronAPI.showAlert(`${res?.error}`);
             }
         }
-    };
+    }
 
     const handleSaveCSVOnClick = async () => {
-        const res = await window.electronAPI.saveCSV(outputDatas)
+        const res = await window.electronAPI.saveCSV(outputDatas);
 
         if (res.success) {
-            await window.electronAPI.showAlert(`Save completed: ${res.filePath}`)
+            await window.electronAPI.showAlert(`Save completed: ${res.filePath}`);
         } else {
-            await window.electronAPI.showAlert(res.error)
-        };
-    };
+            await window.electronAPI.showAlert(res.error);
+        }
+    }
 
     const handleSetInputStatusOnClick = () => {
-        setInputSattus(!inputStatus)
-    };
+        setInputSattus(!inputStatus);
+    }
 
     return (
         <>
@@ -218,7 +214,7 @@ function InOutPutBox() {
                             <p>DATA TABLE</p>
                             <div css={s.iconBox} onClick={handleSaveCSVOnClick}><IoMdDownload /></div>
                         </div>
-                        <OutputTableBox outputDatas={outputDatas} isSuccess={info.isSuccess}/>
+                        <OutputTableBox outputDatas={outputDatas} isSuccess={info.isSuccess} />
                     </div>
                 </div>
             }
