@@ -16,11 +16,8 @@ function TabModal() {
                 ...prev,
                 { id, title: `Tab ${prev.length + 1}`, serverId }
             ]);
-
             set(tabIdAtom, id);
-
             set(tabServerIdAtom(id), serverId);
-
             set(tabStatusAtom, false);
         }
     )

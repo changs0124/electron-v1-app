@@ -68,6 +68,7 @@ function STLModel({ url, temp, min, max }) {
 function ViewerBox({ coilTemp, minCoil, maxCoil, coreTemp, minCore, maxCore }) {
 
     const tabId = useRecoilValue(tabIdAtom);
+
     const [selectedCoilStl, setSelectedCoilStl] = useRecoilState(selectedCoilStlAtom(tabId));
     const [coilUrl, setCoilUrl] = useRecoilState(coilUrlAtom(tabId));
     const [selectedCoreStl, setSelectedCoreStl] = useRecoilState(selectedCoreStlAtom(tabId));
@@ -83,7 +84,7 @@ function ViewerBox({ coilTemp, minCoil, maxCoil, coreTemp, minCore, maxCore }) {
 
             getStlUrl();
         }
-    }, [selectedCoilStl])
+    }, [selectedCoilStl]);
 
     useEffect(() => {
         if (selectedCoreStl?.success) {
@@ -100,11 +101,12 @@ function ViewerBox({ coilTemp, minCoil, maxCoil, coreTemp, minCore, maxCore }) {
 
     const handleSelectStlOnClick = async (set) => {
         const res = await window.electronAPI.selectStl();
+        
         if (res.success) {
             set(res)
         } else {
             window.electronAPI.showAlert(res?.error);
-        }
+        };
     }
 
     return (

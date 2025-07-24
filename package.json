@@ -32,11 +32,11 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2",
+    "concurrently": "^9.2.0",
     "cross-env": "^7.0.3",
-    "electron": "^30.0.0",
+    "electron": "^37.2.4",
     "electron-builder": "^26.0.12",
-    "wait-on": "^7.0.1"
+    "wait-on": "^8.0.4"
   },
   "scripts": {
     "start": "concurrently \"npm run react-start\" \"npm run electron-start\"",

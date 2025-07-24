@@ -8,7 +8,7 @@ import { tabsAtom } from '../../atoms/tabAtoms';
 function TabBox({ tab, tabId, setTabId }) {
     
     const handleSelectTabOnClick = (data) => {
-        setTabId(data?.id)
+        setTabId(data?.id);
     }
 
     const handleDeleteTabOnClick = useRecoilCallback(({set, reset}) => (data) => {

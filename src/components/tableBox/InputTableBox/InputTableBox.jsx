@@ -1,14 +1,13 @@
 /** @jsxImportSource @emotion/react */
-import { useState } from 'react';
 import * as s from './style';
 
-function InputTableBox({ parameters, inputData, setInputData, inputDatas, isSuccess, serverId }) {
+function InputTableBox({ parameters, inputData, setInputData, inputDatas, serverId }) {
 
     const handleInputDataOnChange = (e) => {
         setInputData(prev => ({
             ...prev,
             [e.target.name]: e.target.value
-        }))
+        }));
     }
 
     return (

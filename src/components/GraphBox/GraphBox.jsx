@@ -19,7 +19,7 @@ function GraphBox() {
     const [tempPlotLayout, setTempPlotLayout] = useState({});
 
     useEffect(() => {
-        if (!outputDatas?.length) return
+        if (!outputDatas?.length) return;
 
         let maxYValue = 0;
 
@@ -67,9 +67,9 @@ function GraphBox() {
             }
         };
 
-        setTempPlotData(plotTraces)
-        setTempPlotLayout(newGraphLayout)
-    }, [outputDatas])
+        setTempPlotData(plotTraces);
+        setTempPlotLayout(newGraphLayout);
+    }, [outputDatas]);
 
     return (
         <>

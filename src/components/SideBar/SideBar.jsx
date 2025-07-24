@@ -13,21 +13,21 @@ function SideBar() {
 
     const tabs = useRecoilValue(tabsAtom);
 
-    const setTabStatus = useSetRecoilState(tabStatusAtom)
+    const setTabStatus = useSetRecoilState(tabStatusAtom);
 
     useEffect(() => {
         if (!tabs?.length) {
             setTabStatus(true)
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
         if (tabs?.length > 0) {
             const lastTabId = tabs[tabs?.length - 1].id;
             setTabId(lastTabId);
         } else {
-            setTabStatus(true)
-        }
+            setTabStatus(true);
+        };
     }, [tabs]);
 
     return (

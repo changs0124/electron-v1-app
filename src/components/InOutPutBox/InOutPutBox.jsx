@@ -124,13 +124,13 @@ function InOutPutBox() {
 
     const handleSelectServerOnClick = async () => {
         if (serverId === 1) {
-            const res = await window.electronAPI.selectServer(ROM_EXE_CONSTANTS); // await 표현식 뒤에 세미콜론
+            const res = await window.electronAPI.selectServer(ROM_EXE_CONSTANTS);
 
             if (res.success) {
                 setServerInfo({
                     id: res?.id,
                     port: res?.port
-                }); // 객체 리터럴이 포함된 실행문 뒤에 세미콜론
+                });
             } else if (res?.error === 'The server is already running.') {
                 await window.electronAPI.showAlert(res?.error);
                 setServerInfo({
@@ -204,7 +204,7 @@ function InOutPutBox() {
                                 <BlockMath math={(info.isSuccess && !exeStatus) ? info?.data?.recursiveEquation : 'Server\\ \\ Not \\ \\ Found'} />
                             </div>
                         }
-                        <InputTableBox parameters={info?.data?.parameters} inputData={inputData} setInputData={setInputData} inputDatas={inputDatas} isSuccess={info.isSuccess} serverId={serverId} />
+                        <InputTableBox parameters={info?.data?.parameters} inputData={inputData} setInputData={setInputData} inputDatas={inputDatas} serverId={serverId} />
                     </div>
                     <div css={s.svgBox} onClick={serverId === 2 ? () => predictSOC.mutateAsync().catch(() => { }) : () => { }}>
                         <IoIosArrowForward />
