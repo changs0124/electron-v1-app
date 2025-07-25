@@ -40,7 +40,7 @@ app.on('window-all-closed', () => {
     if (process.platform !== "darwin") app.quit();
 });
 
-ipcMain.handle('save-csv', async (event, jsonArray) => { // ipcMain.handle : render에서 invoke로 호출 가능한 비동기 함수를 등록하는 메소드.
+ipcMain.handle('save-csv', async (event, jsonArray) => {
     if (!Array.isArray(jsonArray) || jsonArray.length === 0) return { success: false, error: 'Invalid or empty data' };
 
     const headers = Object.keys(jsonArray[0]);
@@ -50,16 +50,16 @@ ipcMain.handle('save-csv', async (event, jsonArray) => { // ipcMain.handle : ren
     const csvContent = '\uFEFF' + [headers, ...rows].map(row => row.join(',')).join('\n');
 
     // YYYY-MM-DD
-    const dateStr = new Date().toISOString().split('T')[0]; // 변수 선언 뒤에 세미콜론이 좋습니다.
-    const filename = `${dateStr}_${uuidv4().slice(0, 8)}.csv`; // 변수 선언 뒤에 세미콜론이 좋습니다.
+    const dateStr = new Date().toISOString().split('T')[0];
+    const filename = `${dateStr}_${uuidv4().slice(0, 8)}.csv`;
 
-    const { canceled, filePath } = await dialog.showSaveDialog({ // 저장 다이얼로그 창
+    const { canceled, filePath } = await dialog.showSaveDialog({
         title: 'Save CSV file',
         defaultPath: path.join(app.getPath('downloads'), filename),
         filters: [{ name: 'CSV Files', extensions: ['csv'] }]
     });
 
-    if (canceled || !filePath) return { success: false, error: 'File selection cancelled' };
+    if (canceled || !filePath) return { success: false, error: 'File save cancelled' };
 
     try {
         fs.writeFileSync(filePath, csvContent, 'utf8');

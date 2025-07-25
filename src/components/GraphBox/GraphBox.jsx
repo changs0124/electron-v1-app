@@ -46,7 +46,7 @@ function GraphBox() {
                 marker: { color: lineColor, size: 8 },
                 line: { color: lineColor, width: 3 },
                 name: keyName
-            }
+            };
         });
 
         const yAxisMax = maxYValue > 0 ? maxYValue * 1.1 : 1;

@@ -89,18 +89,18 @@ function InOutPutBox() {
     });
 
     useEffect(() => {
-        if (info.isError) {
+        if (info?.isError) {
             setExeStatus(true);
             setPollingCount(prev => prev + 1);
             return;
         }
 
-        if (info.isFetching) {
+        if (info?.isFetching) {
             setExeStatus(true);
             return;
         }
 
-        if (info.isSuccess) {
+        if (info?.isSuccess) {
             setPollingStatus(true);
             setExeStatus(false);
             setGraphInfo(info?.data?.graph);
@@ -108,7 +108,7 @@ function InOutPutBox() {
             return;
         }
 
-    }, [info.isFetching, info.isError, info.isSuccess]);
+    }, [info?.isFetching, info?.isError, info?.isSuccess]);
 
     useEffect(() => {
         if (pollingCount > 10) {

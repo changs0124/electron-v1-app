@@ -21,7 +21,7 @@ function TabModal() {
             set(tabStatusAtom, false);
         }
     )
-
+    
     const setTabStatus = useSetRecoilState(tabStatusAtom);
 
     return (
