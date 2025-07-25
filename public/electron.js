@@ -7,11 +7,33 @@ const { spawn } = require('child_process');
 const isDev = !app.isPackaged;
 
 let mainWindow;
+let splashWindow;
 let serverProcesses = {};
 
 function getPortAndIdByExeKey(exeName, exeList) {
     const temp = exeList.find(c => c.key === exeName);
     return temp ? { port: temp.port, id: temp.id } : null;
+}
+
+function createSplashWindow() {
+    splashWindow = new BrowserWindow({
+        width: 400,
+        height: 300,
+        frame: false,
+        alwaysOnTop: true,
+        resizable: false,
+        roundedCorners: true,
+        webPreferences: {
+            contextIsolation: true,
+            nodeIntegration: false,
+        }
+    })
+
+    const splashEntryURL = isDev ? 'http://localhost:3000/splash.html' : `file://${path.join(app.getAppPath(), "build/splash.html")}`;
+
+    splashWindow.loadURL(splashEntryURL).catch(err => console.error('Failed to load splash URL:', err));
+
+    splashWindow.on('closed', () => (splashWindow = null));
 }
 
 function createWindow() {
@@ -21,6 +43,7 @@ function createWindow() {
         autoHideMenuBar: true,
         resizable: false,
         focusable: true,
+        show: false,
         webPreferences: {
             preload: path.join(__dirname, '../preload.js'),
             contextIsolation: true,
@@ -32,9 +55,23 @@ function createWindow() {
     const entryURL = isDev ? 'http://localhost:3000' : `file://${path.join(app.getAppPath(), "build/index.html")}`;
 
     mainWindow.loadURL(entryURL).catch(err => console.error('Failed to load URL:', err));
+
+    mainWindow.once('ready-to-show', () => {
+        if (splashWindow) {
+            splashWindow.destroy(); // close() 대신 destroy()를 권장합니다.
+            splashWindow = null;
+        }
+
+        mainWindow.show();
+    });
+
+    mainWindow.on('closed', () => (mainWindow = null));
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+    createSplashWindow();
+    createWindow()
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== "darwin") app.quit();

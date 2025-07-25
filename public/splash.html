@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Loading...</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            border-radius: 15px;
+            width: 100%;
+            height: 100vh;
+            background-color: #282c34;
+            color: #f0f0f0;
+            overflow: hidden;
+            -webkit-app-region: drag; /* 창 이동 가능하게 (프레임리스 창의 경우) */
+        }
+        .spinner {
+            margin-bottom: 20px;
+            border: 8px solid #444;
+            border-top: 8px solid #61dafb;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        p {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="spinner"></div>
+    <p>Loading your application...</p>
+</body>
+
+</html>
