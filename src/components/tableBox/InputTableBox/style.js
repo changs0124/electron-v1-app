@@ -18,7 +18,7 @@ export const tableStyle = css`
     font-weight: 500;
     
     th, td {
-      padding: 10px 30px;
+      padding: 10px;
       border: 1px solid #ddd;
       text-align: center;
     }

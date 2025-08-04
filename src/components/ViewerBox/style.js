@@ -46,7 +46,7 @@ export const selectBox = css`
     border: 2px solid #dbdbdb;
     border-radius: 15px;
     padding: 10px;
-    width: 80%;
+    width: 70%;
     height: 30%;
     color: #666666;
     font-size: 25px;
@@ -56,11 +56,8 @@ export const selectBox = css`
     overflow: hidden;
 
     :hover {
-        border: 2px solid #666666;
-    }
-
-    :active {
-        border: 2px solid #333333;
+        border: 2px solid #EF5B25;
+        color: #EF5B25;
     }
 `;
 
@@ -69,10 +66,10 @@ export const svgBox = css`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 10%;
-
+    width: fit-content;
+    
     & > svg {
         color: #666666;
-        font-size: 50px;
+        font-size: 60px;
     }
 `;

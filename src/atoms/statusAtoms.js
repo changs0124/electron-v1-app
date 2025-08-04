@@ -1,5 +1,11 @@
 import { atom, atomFamily } from "recoil";
 
+// 해당 사용자의 LicenseKey값의 따른 컴포넌트 렌더링을 위한 Status 
+export const licenseStatusAtom = atom({
+    key: 'licenseStatusAtom',
+    default: false
+})
+
 // tab 생성을 위한 tabModal의 Status
 export const tabStatusAtom = atom({
     key: 'tabStatusAtom',
@@ -21,5 +27,11 @@ export const exeStatusAtom = atomFamily({
 // useQuery['info']의 refetchInterval을 유무에 대한 Status
 export const pollingStatusAtom = atomFamily({
     key: 'pollingStatusAtom',
+    default: false
+})
+
+// 예측값이 limit값을 넘었을 시에 경고 알람을 위한 Status
+export const limitStatusAtom = atomFamily({
+    key: 'limitStatusAtom',
     default: false
 })

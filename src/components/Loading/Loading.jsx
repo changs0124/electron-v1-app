@@ -12,6 +12,7 @@ function Loading() {
                             marginBottom: "10px"    
 
                         }}
+                        color='#EF5B25'
                         size={100}
                         aria-label='Loading...'
                     />

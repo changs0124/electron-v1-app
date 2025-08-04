@@ -38,11 +38,7 @@ export const iconBox = css`
         font-size: 30px;
 
         :hover {
-            color: #333333;
-        }
-
-        :active {
-            color: #000000;
+            color: #EF5B25;
         }
     }
 `;
@@ -75,6 +71,7 @@ export const exeBox = css`
         align-items: center;
         width: 100%;
         height: 100%;
+        color: #EF5B25;
         font-size: 20px;
         font-weight: 500;
         text-align: center;
@@ -88,24 +85,15 @@ export const buttonBox = css`
     display: flex;
     margin-bottom: 10px;
     width: 40%;
+    cursor: pointer;
 
     & > button {
-        border: 2px solid #666666;
+        border: 2px solid #EF5B25;
         border-radius: 15px;
         width: 100%;
-        color: #666666;
+        background-color: #EF5B25;
+        color: #ffffff;
         font-size: 18px;
-        font-weight: 600;
-
-        :hover {
-            border: 2px solid #333333;
-            color: #333333;
-        }
-
-        :active {
-            border: 2px solid #000000;
-            color: #000000;
-        }
     }
 `;
 
@@ -121,6 +109,7 @@ export const katexBox = css`
     min-height: 50%;
 
     & .katex-mathml {
+        color: #EF5B25;
         font-size: 30px;
     }
 
@@ -134,23 +123,17 @@ export const svgBox = css`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 10%;
+    min-width: 10%;
     cursor: pointer;
 
     & > svg {
-        color: #666666;
+        color: #333333;
         font-size: 80px;
     }
 
     :hover {
         & > svg {
-            color: #333333;
-        }
-    }
-
-    :active {
-        & > svg {
-            color: #000000;
+            color: #EF5B25;
         }
     }
 `;

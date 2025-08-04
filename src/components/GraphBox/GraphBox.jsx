@@ -29,7 +29,7 @@ function GraphBox() {
         const xValues = dataIndices?.map(key => Number(key) + 1);
 
         const plotTraces = dataKeys?.map((keyName, index) => {
-            const tempYValues = dataIndices?.map(dataIdx => outputDatas[dataIdx][keyName]);
+            const tempYValues = dataIndices?.map(dataIdx => outputDatas[dataIdx][keyName]?.temp);
             const lineColor = LINE_COLORS_CONSTANTS[index % LINE_COLORS_CONSTANTS?.length];
             
             tempYValues.forEach(v => {

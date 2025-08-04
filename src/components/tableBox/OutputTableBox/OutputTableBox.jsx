@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import * as s from './style';
 
-function OutputTableBox({ outputDatas }) {
+function OutputTableBox({ tableHeader, outputDatas }) {
 
     return (
         <div css={s.layout}>
@@ -11,8 +11,8 @@ function OutputTableBox({ outputDatas }) {
                     <thead>
                         <tr>
                             {
-                                Object.keys(outputDatas[0] || {}).map(key => (
-                                    <th key={key}>{key}</th>
+                                tableHeader?.map((h, idx) => (
+                                    <th key={idx}>{h}</th>
                                 ))
                             }
                         </tr>
@@ -22,8 +22,8 @@ function OutputTableBox({ outputDatas }) {
                             outputDatas?.map((row, idx) => (
                                 <tr key={idx}>
                                     {
-                                        Object.keys(outputDatas[0] || {}).map(key => (
-                                            <td key={key}>{row[key]}</td>
+                                        tableHeader?.map((h, idx) => (
+                                            <td key={idx} css={s.cusTd(row[h]?.temp, row[h]?.limit)}>{row[h]?.temp}</td>
                                         ))
                                     }
                                 </tr>

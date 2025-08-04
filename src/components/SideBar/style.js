@@ -30,18 +30,10 @@ export const addBox = css`
     }
 
     :hover {
-        border: 2px solid #666666;
+        border: 2px solid #EF5B25;
 
         & > svg {
-            color: #333333;
-        }
-    }
-
-    :active {
-        border: 2px solid #333333;
-
-        & > svg {
-            color: #000000;
+            color: #EF5B25;
         }
     }
 `;

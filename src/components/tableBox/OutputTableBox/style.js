@@ -18,7 +18,7 @@ export const tableStyle = css`
     font-weight: 500;
 
     th, td {
-      padding: 10px 16px;
+      padding: 10px;
       border: 1px solid #ddd;
       text-align: center;
     }
@@ -27,4 +27,8 @@ export const tableStyle = css`
       background-color: #f2f4f7;
       font-weight: 600;
     }
+`;
+
+export const cusTd = (temp, limit) => css`
+  color: ${(temp > limit) ? 'red' : 'black'}
 `;

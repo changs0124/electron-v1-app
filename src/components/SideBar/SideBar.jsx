@@ -8,11 +8,8 @@ import { useEffect } from 'react';
 import { tabStatusAtom } from '../../atoms/statusAtoms';
 
 function SideBar() {
-
     const [tabId, setTabId] = useRecoilState(tabIdAtom);
-
     const tabs = useRecoilValue(tabsAtom);
-
     const setTabStatus = useSetRecoilState(tabStatusAtom);
 
     useEffect(() => {

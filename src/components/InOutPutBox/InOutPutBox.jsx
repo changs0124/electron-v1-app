@@ -7,11 +7,12 @@ import InputTableBox from '../tableBox/InputTableBox/InputTableBox';
 import OutputTableBox from '../tableBox/OutputTableBox/OutputTableBox';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { tabIdAtom, tabsAtom, tabServerIdAtom } from '../../atoms/tabAtoms';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { inputInstance, instance } from '../../apis/instance';
-import { graphInfoAtom, indexAtom, inputDataAtom, inputDatasAtom, outPutDatasAtom, pollingCountAtom, serverInfoAtom } from '../../atoms/dataAtoms';
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { graphInfoAtom, indexAtom, inputDataAtom, inputDatasAtom, outPutDatasAtom, pollingCountAtom, serverInfoAtom, warningDatasAtom } from '../../atoms/dataAtoms';
 import { ROM_EXE_CONSTANTS, ROM_PINN_EXE_CONSTANTS } from '../../constants/ExeConstants';
 import { exeStatusAtom, inputStatusAtom, pollingStatusAtom } from '../../atoms/statusAtoms';
+import { exeInstance, instance } from '../../apis/instance';
+import { toast } from 'react-toastify';
 
 function InOutPutBox() {
     const [isRpHovered, setIsRpHovered] = useState(false);
@@ -27,6 +28,7 @@ function InOutPutBox() {
     const [inputData, setInputData] = useRecoilState(inputDataAtom(tabId));
     const [inputDatas, setInputDatas] = useRecoilState(inputDatasAtom(tabId));
     const [outputDatas, setOutputDatas] = useRecoilState(outPutDatasAtom(tabId));
+    const [warningDatas, setWarningDatas] = useRecoilState(warningDatasAtom(tabId));
 
     const [index, setIndex] = useRecoilState(indexAtom(tabId));
 
@@ -37,7 +39,7 @@ function InOutPutBox() {
 
     const info = useQuery({
         queryKey: ['info', serverInfo],
-        queryFn: () => instance(serverInfo?.port).get(`/info/${serverInfo?.id}`).then(res => res?.data),
+        queryFn: () => exeInstance(serverInfo?.port).get(`/info/${serverInfo?.id}`).then(res => res?.data),
         enabled: serverInfo?.id !== '' && !!serverInfo?.port,
         retry: false,
         refetchOnWindowFocus: true,
@@ -47,7 +49,7 @@ function InOutPutBox() {
 
     const input = useQuery({
         queryKey: ["input", index],
-        queryFn: () => inputInstance.get(`/input/${index}`)
+        queryFn: () => instance.get(`/input/${index}`)
             .then(res => {
                 predictTemp.mutateAsync(res?.data);
                 return res?.data;
@@ -63,7 +65,7 @@ function InOutPutBox() {
     });
 
     const predictSOC = useMutation({
-        mutationFn: () => instance(serverInfo?.port).post('/predict', inputData),
+        mutationFn: () => exeInstance(serverInfo?.port).post('/predict', inputData),
         onSuccess: async (res) => {
             setOutputDatas(prev => [...prev, res?.data]);
             await window.electronAPI.showAlert('Prediction success');
@@ -74,10 +76,27 @@ function InOutPutBox() {
     });
 
     const predictTemp = useMutation({
-        mutationFn: (data) => instance(serverInfo?.port).post('/predict', data),
+        mutationFn: (data) => exeInstance(serverInfo?.port).post('/predict', data),
         onSuccess: async (res, variables) => {
             setInputDatas(prev => [...prev, variables]);
             setOutputDatas(prev => [...prev, res?.data]);
+
+            if (res?.data) {
+                info?.data?.tableHeader?.forEach(h => {
+                    const data = res?.data[h]
+                    if (data && data?.temp > data?.limit) {
+                        toast.error(`${h}: 온도가 임계값(${data.limit})을 초과했습니다! (${data.temp})`, {
+                            position: "top-right", // 알림 위치 (선택 사항)
+                            autoClose: 5000, // 5초 후 자동 닫힘 (선택 사항)
+                            hideProgressBar: false, // 진행 바 표시 여부 (선택 사항)
+                            closeOnClick: true, // 클릭 시 닫힘 여부 (선택 사항)
+                            pauseOnHover: true, // 호버 시 일시 정지 여부 (선택 사항)
+                            draggable: true, // 드래그 가능 여부 (선택 사항)
+                            progress: undefined, // 커스텀 진행 바 (선택 사항)
+                        });
+                    }
+                })
+            }
 
             await new Promise(resolve => setTimeout(resolve, 3000));
             setIndex(prev => prev + 1);
@@ -121,6 +140,10 @@ function InOutPutBox() {
         }
 
     }, [pollingCount]);
+
+    useEffect(() => {
+
+    }, [])
 
     const handleSelectServerOnClick = async () => {
         if (serverId === 1) {
@@ -189,9 +212,9 @@ function InOutPutBox() {
                         {
                             serverId === 1 &&
                             <div css={s.exeBox}>
-                                <p>{(info.isSuccess && !exeStatus) ? info?.data?.equation : 'Please Select the .exe'}</p>
+                                <p>{(info?.isSuccess && !exeStatus) ? info?.data?.equation : 'Please Select the .exe'}</p>
                                 {
-                                    info.isSuccess &&
+                                    info?.isSuccess &&
                                     <div css={s.buttonBox}>
                                         <button onClick={handleSetInputStatusOnClick}>{inputStatus ? 'Stop Predict' : 'Get InputDatas And Start Predict'}</button>
                                     </div>
@@ -214,7 +237,7 @@ function InOutPutBox() {
                             <p>DATA TABLE</p>
                             <div css={s.iconBox} onClick={handleSaveCSVOnClick}><IoMdDownload /></div>
                         </div>
-                        <OutputTableBox outputDatas={outputDatas} isSuccess={info.isSuccess} />
+                        <OutputTableBox tableHeader={info?.data?.tableHeader} outputDatas={outputDatas} isSuccess={info.isSuccess} />
                     </div>
                 </div>
             }

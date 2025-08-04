@@ -24,6 +24,13 @@ export const outPutDatasAtom = atomFamily({
     effects_UNSTABLE: [persistAtom]
 })
 
+// outputDatas 중에 임계치를 넘은 데이터를 모아두는 리스트
+export const warningDatasAtom = atomFamily({
+    key: 'warningDatasAtom',
+    default: [],
+    effects_UNSTABLE: [persistAtom]
+})
+
 // .exe의 id, port
 export const serverInfoAtom = atomFamily({
     key: 'serverInfoAtom',

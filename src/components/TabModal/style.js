@@ -35,7 +35,7 @@ export const titleBox = css`
     height: 20%;
 
     & > p {
-        color: #666666;
+        color: #333333;
         font-size: 20px;
         font-weight: 600;
     }
@@ -60,13 +60,7 @@ export const svgBox = css`
 
     :hover {
         & > svg {
-            color: #333333;
-        }
-    }
-
-    :active {
-        & > svg {
-            color: #000000;
+            color: #EF5B25;
         }
     }
 `;
@@ -79,7 +73,6 @@ export const selectBox = css`
     align-items: center;
     padding: 10px;
     width: 100%;
-    
 `;
 
 export const selectItem = css`
@@ -97,12 +90,7 @@ export const selectItem = css`
     cursor: pointer;
 
     :hover {
-        border: 2px solid #333333;
-        color: #333333;
-    }
-
-    :active {
-        border: 2px solid #333333;
-        color: #000000;
+        border: 2px solid #EF5B25;
+        color: #EF5B25;
     }
 `;

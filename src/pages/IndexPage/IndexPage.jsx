@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import * as s from './style';
 import { useRecoilValue } from 'recoil';
 import Container from '../../components/Container/Container';
 import Layout from '../../components/Layout/Layout';
@@ -9,16 +11,19 @@ import GraphBox from '../../components/GraphBox/GraphBox';
 import ViewerBox from '../../components/ViewerBox/ViewerBox';
 import Loading from '../../components/Loading/Loading';
 import { exeStatusAtom, tabStatusAtom } from '../../atoms/statusAtoms';
+import { ToastContainer } from 'react-toastify';
 
 function IndexPage() {
     const tabStatus = useRecoilValue(tabStatusAtom);
     const tabs = useRecoilValue(tabsAtom);
     const tabId = useRecoilValue(tabIdAtom);
+
     const serverId = useRecoilValue(tabServerIdAtom(tabId));
     const exeStatus = useRecoilValue(exeStatusAtom(tabId));
 
     return (
         <Layout>
+            <ToastContainer />
             {
                 tabStatus &&
                 <TabModal />
@@ -29,6 +34,9 @@ function IndexPage() {
             }
             <SideBar />
             <Container>
+                <div>
+                    
+                </div>
                 <InOutPutBox />
                 <GraphBox />
                 {

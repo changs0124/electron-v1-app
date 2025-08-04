@@ -26,7 +26,7 @@ function TabBox({ tab, tabId, setTabId }) {
     return (
         <div css={s.layout(tab?.id, tabId)} onClick={() => handleSelectTabOnClick(tab)}>
             <div css={s.deleteBox(tab?.id, tabId)} onClick={() => handleDeleteTabOnClick(tab)}><IoIosClose /></div>
-            <p css={s.titleBox(tab?.id, tabId)}>{tab?.title}</p>
+            <p>{tab?.title}</p>
         </div>
     );
 }
