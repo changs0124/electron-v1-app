@@ -2,7 +2,7 @@
 import { useRecoilCallback, useSetRecoilState } from 'recoil';
 import * as s from './style';
 import { IoIosClose } from "react-icons/io";
-import { tabIdAtom, tabsAtom, tabServerIdAtom } from '../../atoms/tabAtoms';
+import { serverIdAtom, tabIdAtom, tabsAtom } from '../../atoms/tabAtoms';
 import { v4 as uuidv4 } from 'uuid';
 import { tabStatusAtom } from '../../atoms/statusAtoms';
 
@@ -17,7 +17,7 @@ function TabModal() {
                 { id, title: `Tab ${prev.length + 1}`, serverId }
             ]);
             set(tabIdAtom, id);
-            set(tabServerIdAtom(id), serverId);
+            set(serverIdAtom(id), serverId);
             set(tabStatusAtom, false);
         }
     )

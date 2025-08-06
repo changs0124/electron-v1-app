@@ -24,63 +24,47 @@ export const outPutDatasAtom = atomFamily({
     effects_UNSTABLE: [persistAtom]
 })
 
-// outputDatas 중에 임계치를 넘은 데이터를 모아두는 리스트
-export const warningDatasAtom = atomFamily({
-    key: 'warningDatasAtom',
-    default: [],
-    effects_UNSTABLE: [persistAtom]
-})
-
 // .exe의 id, port
 export const serverInfoAtom = atomFamily({
     key: 'serverInfoAtom',
-    default: {},
+    default: {
+        id: '',
+        port: 0
+    },
     effects_UNSTABLE: [persistAtom]
-})
-
-// reactQuery - info의 pollingCount
-export const pollingCountAtom = atomFamily({
-    key: 'pollingCountAtom',
-    default: 0,
-    effects_UNSTABLE: [persistAtom]
-})
-
-// reactQuery - info: graph에 필요한 정보
-export const graphInfoAtom = atomFamily({
-    key: 'graphInfoAtom',
-    default: {}
 })
 
 // reactQuery - input 하나씩 다음 거를 가지고 오기 위한 인덱스
 export const indexAtom = atomFamily({
-    key: "indexAtom",
-    default: 1
+    key: 'indexAtom',
+    default: 1,
+    effects_UNSTABLE: [persistAtom]
 })
 
 // Coil-Stl
 export const selectedCoilStlAtom = atomFamily({
-    key: "selectedCoilStlAtom",
+    key: 'selectedCoilStlAtom',
     default: {},
     effects_UNSTABLE: [persistAtom]
 })
 
 // Coil-Stl > Buffer
 export const coilUrlAtom = atomFamily({
-    key: "coilUrlAtom",
+    key: 'coilUrlAtom',
     default: "",
     effects_UNSTABLE: [persistAtom]
 })
 
 // Core-Stl
 export const selectedCoreStlAtom = atomFamily({
-    key: "selectedCoreStlAtom",
+    key: 'selectedCoreStlAtom',
     default: {},
     effects_UNSTABLE: [persistAtom]
 })
 
 // Core-Stl > Buffer
 export const coreUrlAtom = atomFamily({
-    key: "coreUrlAtom",
+    key: 'coreUrlAtom',
     default: "",
     effects_UNSTABLE: [persistAtom]
 })

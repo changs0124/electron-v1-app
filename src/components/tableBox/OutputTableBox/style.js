@@ -30,5 +30,5 @@ export const tableStyle = css`
 `;
 
 export const cusTd = (temp, limit) => css`
-  color: ${(temp > limit) ? 'red' : 'black'}
+  color: ${(temp > limit) ? '#EF5B25' : '#000000'}
 `;

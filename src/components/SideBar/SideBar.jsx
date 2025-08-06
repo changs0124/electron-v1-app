@@ -1,17 +1,19 @@
 /** @jsxImportSource @emotion/react */
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import TabBox from '../TabBox/TabBox';
 import * as s from './style';
+import TabBox from '../TabBox/TabBox';
 import { IoIosAdd } from "react-icons/io";
-import { tabIdAtom, tabsAtom } from '../../atoms/tabAtoms';
 import { useEffect } from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { tabIdAtom, tabsAtom } from '../../atoms/tabAtoms';
 import { tabStatusAtom } from '../../atoms/statusAtoms';
 
 function SideBar() {
-    const [tabId, setTabId] = useRecoilState(tabIdAtom);
     const tabs = useRecoilValue(tabsAtom);
+    
     const setTabStatus = useSetRecoilState(tabStatusAtom);
 
+    const [tabId, setTabId ] = useRecoilState(tabIdAtom);
+    
     useEffect(() => {
         if (!tabs?.length) {
             setTabStatus(true)

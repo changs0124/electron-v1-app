@@ -19,11 +19,11 @@ function OutputTableBox({ tableHeader, outputDatas }) {
                     </thead>
                     <tbody>
                         {
-                            outputDatas?.map((row, idx) => (
+                            outputDatas?.map((data, idx) => (
                                 <tr key={idx}>
                                     {
                                         tableHeader?.map((h, idx) => (
-                                            <td key={idx} css={s.cusTd(row[h]?.temp, row[h]?.limit)}>{row[h]?.temp}</td>
+                                            <td key={idx} css={s.cusTd(data[h]?.temp, data[h]?.limit)}>{data[h]?.temp}</td>
                                         ))
                                     }
                                 </tr>

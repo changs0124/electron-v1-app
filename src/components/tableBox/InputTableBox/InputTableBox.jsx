@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import * as s from './style';
 
-function InputTableBox({ parameters, inputData, setInputData, inputDatas, serverId }) {
+function InputTableBox({ parameter, serverId, inputData, setInputData, inputDatas }) {
 
     const handleInputDataOnChange = (e) => {
         setInputData(prev => ({
@@ -18,19 +18,19 @@ function InputTableBox({ parameters, inputData, setInputData, inputDatas, server
                     <thead>
                         <tr>
                             {
-                                Object.keys(inputDatas[0] || {})?.map(key => (
-                                    <th key={key}>{key}</th>
+                                parameter?.map((param, idx) => (
+                                    <th key={idx}>{param?.name}</th>
                                 ))
                             }
                         </tr>
                     </thead>
                     <tbody>
                         {
-                            inputDatas?.map((row, idx) => (
+                            inputDatas?.map((data, idx) => (
                                 <tr key={idx}>
                                     {
-                                        Object.keys(inputDatas[0] || {})?.map(key => (
-                                            <td key={key}>{row[key]}</td>
+                                        parameter?.map((param, idx) => (
+                                            <td key={idx}>{data[param?.key]}</td>
                                         ))
                                     }
                                 </tr>
@@ -44,7 +44,7 @@ function InputTableBox({ parameters, inputData, setInputData, inputDatas, server
                 <table css={s.tableStyle}>
                     <tbody>
                         {
-                            parameters?.map(param => (
+                            parameter?.map(param => (
                                 <tr key={param.key}>
                                     <th>{param?.name}</th>
                                     <td><input name={param?.key} type='text' value={inputData[param?.key]} onChange={handleInputDataOnChange} autoFocus={true}/></td>

@@ -1,37 +1,41 @@
 /** @jsxImportSource @emotion/react */
-import Plot from 'react-plotly.js';
 import * as s from './style';
-import { useRecoilValue } from 'recoil';
-import { tabIdAtom, tabsAtom, tabServerIdAtom } from '../../atoms/tabAtoms';
-import { graphInfoAtom, outPutDatasAtom } from '../../atoms/dataAtoms';
+import Plot from 'react-plotly.js';
 import { useEffect, useState } from 'react';
 import { LINE_COLORS_CONSTANTS } from '../../constants/colorConstants';
+import { useRecoilValue } from 'recoil';
+import { serverIdAtom, tabIdAtom } from '../../atoms/tabAtoms';
+import { outPutDatasAtom } from '../../atoms/dataAtoms';
 
-function GraphBox() {
+function GraphBox({ graphInfo }) {
     const tabId = useRecoilValue(tabIdAtom);
-    const tabs = useRecoilValue(tabsAtom);
-    const serverId = useRecoilValue(tabServerIdAtom(tabId));
-
-    const graphInfo = useRecoilValue(graphInfoAtom(tabId));
+    const serverId = useRecoilValue(serverIdAtom(tabId));
     const outputDatas = useRecoilValue(outPutDatasAtom(tabId));
 
     const [tempPlotData, setTempPlotData] = useState([]);
     const [tempPlotLayout, setTempPlotLayout] = useState({});
 
     useEffect(() => {
-        if (!outputDatas?.length) return;
+        if (!outputDatas?.length) {
+            setTempPlotData([]);
+            setTempPlotLayout({});
+            return;
+        }
 
         let maxYValue = 0;
 
+        // 그래프 line의 이름에 쓸 배열 추출
         const dataKeys = Object.keys(outputDatas[0]);
-        const dataIndices = Object.keys(outputDatas).filter(key => !isNaN(Number(key)));
 
+        // X축에 사용할 x좌표를 위해 배열의 각 인덱스를 추출
+        const dataIndices = Object.keys(outputDatas).filter(key => !isNaN(Number(key)));
+        // 배열의 인덱스에 1을 더해 1부터 시작하는 숫자 시퀀스 만듬
         const xValues = dataIndices?.map(key => Number(key) + 1);
 
         const plotTraces = dataKeys?.map((keyName, index) => {
             const tempYValues = dataIndices?.map(dataIdx => outputDatas[dataIdx][keyName]?.temp);
             const lineColor = LINE_COLORS_CONSTANTS[index % LINE_COLORS_CONSTANTS?.length];
-            
+
             tempYValues.forEach(v => {
                 if (typeof v === 'number' && v > maxYValue) {
                     maxYValue = v;
@@ -53,12 +57,19 @@ function GraphBox() {
 
         const newGraphLayout = {
             title: graphInfo?.title,
-            xaxis: { title: graphInfo?.xTitle },
+            xaxis: {
+                title: graphInfo?.xTitle,
+                showspikes: true,
+                spikemode: 'across',
+                spikesnap: 'data', 
+                showline: true,
+                showgrid: true
+            },
             yaxis: {
                 title: graphInfo?.yTitle,
                 range: [0, yAxisMax]
             },
-            hovermode: 'closest',
+            hovermode: 'x unified',
             showlegend: true,
             legend: {
                 x: 1.02,
@@ -72,27 +83,22 @@ function GraphBox() {
     }, [outputDatas]);
 
     return (
-        <>
-            {
-                !!tabs?.length &&
-                <div css={s.layout(serverId)}>
-                    <p css={s.titleBox}>DATA GRAPH</p>
-                    <div css={s.container}>
-                        {
-                            !!outputDatas?.length &&
-                            <Plot
-                                data={tempPlotData}
-                                layout={tempPlotLayout}
-                                useResizeHandler={true}
-                                style={{ width: '100%', height: '100%' }}
-                                config={{ responsive: false }}
-                            />
-                        }
-                    </div>
-                </div>
+        <div css={s.layout(serverId)}>
+            <p css={s.titleBox}>DATA GRAPH</p>
+            <div css={s.container}>
+                {
+                    !!graphInfo &&
+                    <Plot
 
-            }
-        </>
+                        data={tempPlotData}
+                        layout={tempPlotLayout}
+                        useResizeHandler={true}
+                        style={{ width: '100%', height: '100%' }}
+                        config={{ responsive: false }}
+                    />
+                }
+            </div>
+        </div>
     );
 }
 

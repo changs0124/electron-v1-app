@@ -1,23 +1,34 @@
 import { Global } from '@emotion/react';
 import { reset } from './style/theme';
-import IndexPage from './pages/IndexPage/IndexPage';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { instance } from './apis/instance';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
-import { useRecoilState } from 'recoil';
-import { licenseStatusAtom } from './atoms/statusAtoms';
+import IndexPage from './pages/IndexPage/IndexPage';
 
 function App() {
-  const [licenseStatus, setLicenseStatus] = useRecoilState(licenseStatusAtom);
+  const [licenseStatus, setLicenseStatus] = useState(false);
+
+  const validLicenseKey = useQuery({
+    queryKey: ['licenseKey'],
+    queryFn: () => instance.get(`/license/${localStorage.getItem('licenseKey')}`),
+    enabled: localStorage.getItem('licenseKey') !== null,
+    retry: 0,
+    refetchOnWindowFocus: false
+  })
 
   useEffect(() => {
     const licenseKey = localStorage.getItem('licenseKey')
-
-    if (!licenseKey) {
-      setLicenseStatus(false);
-      return;
+    if(!licenseKey) {
+      setLicenseStatus(true)
     }
+  }, [])
 
-  }, [licenseStatus])
+  useEffect(() => {
+    if(validLicenseKey.isError) {
+      setLicenseStatus(true)
+    }
+  }, [validLicenseKey.isError])
 
   return (
     <>
@@ -25,7 +36,7 @@ function App() {
       {
         licenseStatus
           ?
-          <RegisterPage />
+          <RegisterPage setLicenseStatus={setLicenseStatus}/>
           :
           <IndexPage />
       }

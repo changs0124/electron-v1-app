@@ -8,7 +8,7 @@ export const layout = (serverId) => css`
     border-radius: 15px;
     padding: 10px;
     width: ${!!serverId && serverId === 1 ? '64.5' : '100'}%;
-    height: 49.5%;
+    height: 100%;
 `;
 
 export const titleBox = css`
@@ -27,8 +27,6 @@ export const titleBox = css`
 export const container = css`
     box-sizing: border-box;
     display: flex;
-    justify-content: center;
-    align-items: end;
     width: 100%;
-    height: 100%;
+    height: 90%;
 `;

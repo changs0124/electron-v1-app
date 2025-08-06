@@ -3,8 +3,12 @@ import { css } from "@emotion/react";
 export const layout = css`
     box-sizing: border-box;
     display: flex;
-    width: 100%;
-    height: 49.5%;
+    flex-direction: column;
+    border: 3px solid #dbdbdb;
+    border-radius: 15px;
+    padding: 10px;
+    width: 55%;
+    height: 100%;
 `;
 
 export const titleBox = css`
@@ -41,17 +45,6 @@ export const iconBox = css`
             color: #EF5B25;
         }
     }
-`;
-
-export const inputContainer = css`
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    border: 3px solid #dbdbdb;
-    border-radius: 15px;
-    padding: 10px;
-    width: 55%;
-    height: 100%;
 `;
 
 export const exeBox = css`
@@ -117,35 +110,3 @@ export const katexBox = css`
         display: none !important;
     }
 `;
-
-export const svgBox = css`
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 10%;
-    cursor: pointer;
-
-    & > svg {
-        color: #333333;
-        font-size: 80px;
-    }
-
-    :hover {
-        & > svg {
-            color: #EF5B25;
-        }
-    }
-`;
-
-export const outputContainer = css`
-    box-sizing: border-box;
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    border: 3px solid #dbdbdb;
-    border-radius: 15px;
-    padding: 10px;
-    height: 100%;
-`;
-

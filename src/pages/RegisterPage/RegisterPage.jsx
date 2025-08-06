@@ -4,23 +4,19 @@ import Layout from "../../components/Layout/Layout";
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { instance } from '../../apis/instance';
-import { useSetRecoilState } from 'recoil';
-import { licenseStatusAtom } from '../../atoms/statusAtoms';
 
-function RegisterPage() {
-    
-    const setLicenseStatus = useSetRecoilState(licenseStatusAtom);
-    
+function RegisterPage({ setLicenseStatus }) {
     const [licenseKey, setLisenseKey] = useState('');
 
-    const register = useMutation({
-        mutationFn: () => instance.post('license', licenseKey),
-        onSuccess: () => {
+    const activateLicenseKey = useMutation({
+        mutationFn: () => instance.patch(`/license/${licenseKey}`),
+        onSuccess: async (res) => {
+            await window.electronAPI.showAlert(res?.data);
             localStorage.setItem('licenseKey', licenseKey);
             setLicenseStatus(false)
         },
-        onError: () => {
-
+        onError: async (e) => {
+            await window.electronAPI.showAlert(e?.response?.data);
         }
     })
 
@@ -36,10 +32,10 @@ function RegisterPage() {
                 </div>
                 <div css={s.container}>
                     <div css={s.inputBox}>
-                        <input type="text" value={licenseKey} onChange={handleLicenseKeyOnChange}/>
+                        <input type="text" value={licenseKey} onChange={handleLicenseKeyOnChange} />
                     </div>
                     <div css={s.buttonBox}>
-                        <button onClick={register.mutateAsync().catch(() => {})}>REGISTER</button>
+                        <button onClick={() => activateLicenseKey.mutateAsync().catch(() => { })}>Activate</button>
                     </div>
                 </div>
             </div>

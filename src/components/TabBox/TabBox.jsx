@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import { useRecoilCallback } from 'recoil';
 import * as s from './style';
+import { useRecoilCallback } from 'recoil';
 import { IoIosClose } from "react-icons/io";
 import { coilUrlAtom, coreUrlAtom, inputDataAtom, outPutDatasAtom, selectedCoilStlAtom, selectedCoreStlAtom, serverInfoAtom } from '../../atoms/dataAtoms';
 import { tabsAtom } from '../../atoms/tabAtoms';
