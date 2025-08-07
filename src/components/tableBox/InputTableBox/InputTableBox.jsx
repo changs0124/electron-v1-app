@@ -44,8 +44,8 @@ function InputTableBox({ parameter, serverId, inputData, setInputData, inputData
                 <table css={s.tableStyle}>
                     <tbody>
                         {
-                            parameter?.map(param => (
-                                <tr key={param.key}>
+                            parameter?.map((param, idx) => (
+                                <tr key={idx}>
                                     <th>{param?.name}</th>
                                     <td><input name={param?.key} type='text' value={inputData[param?.key]} onChange={handleInputDataOnChange} autoFocus={true}/></td>
                                 </tr>

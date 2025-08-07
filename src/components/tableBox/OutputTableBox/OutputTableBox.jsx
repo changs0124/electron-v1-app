@@ -11,8 +11,8 @@ function OutputTableBox({ tableHeader, outputDatas }) {
                     <thead>
                         <tr>
                             {
-                                tableHeader?.map((h, idx) => (
-                                    <th key={idx}>{h}</th>
+                                tableHeader?.map((header, idx) => (
+                                    <th key={idx}>{header}</th>
                                 ))
                             }
                         </tr>
@@ -22,8 +22,8 @@ function OutputTableBox({ tableHeader, outputDatas }) {
                             outputDatas?.map((data, idx) => (
                                 <tr key={idx}>
                                     {
-                                        tableHeader?.map((h, idx) => (
-                                            <td key={idx} css={s.cusTd(data[h]?.temp, data[h]?.limit)}>{data[h]?.temp}</td>
+                                        tableHeader?.map((header, idx) => (
+                                            <td key={idx} css={s.cusTd(data[header]?.data, data[header]?.limit)}>{data[header]?.data}</td>
                                         ))
                                     }
                                 </tr>

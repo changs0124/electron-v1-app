@@ -23,7 +23,7 @@ function InputBox({ info }) {
     const [inputStatus, setInputStatus] = useRecoilState(inputStatusAtom(tabId));
 
     const setOutputDatas = useSetRecoilState(outPutDatasAtom(tabId));
-    console.log(index)
+
     const input = useQuery({
         queryKey: ["input", index],
         queryFn: () => instance.get(`/data/${index}`)
@@ -51,8 +51,8 @@ function InputBox({ info }) {
                 info?.data?.tableHeader?.forEach(header => {
                     const data = res?.data[header];
 
-                    if (data && data?.temp > data?.limit) {
-                        toast.error(`${header} : ${(data.temp - data.limit).toFixed(2)} 초과`,
+                    if (data && data?.data > data?.limit) {
+                        toast.error(`${header} : ${(data.data - data.limit).toFixed(2)} 초과`,
                             {
                                 position: "bottom-right", // 알림 위치 (선택 사항)
                                 autoClose: 3000, // 5초 후 자동 닫힘 (선택 사항)
@@ -119,7 +119,6 @@ function InputBox({ info }) {
         setInputStatus(!inputStatus);
     }
 
-
     return (
         <div css={s.layout}>
             <div css={s.titleBox}>
@@ -141,7 +140,7 @@ function InputBox({ info }) {
             {
                 serverId === 2 &&
                 <div css={s.katexBox}>
-                    <BlockMath math={info.isSuccess ? info?.data?.recursiveEquation : 'Server\\ \\ Not \\ \\ Found'} />
+                    <BlockMath math={info?.isSuccess ? info?.data?.recursiveEquation : 'Server\\ \\ Not \\ \\ Found'} />
                 </div>
             }
             <InputTableBox parameter={info?.data?.parameter} inputData={inputData} setInputData={setInputData} inputDatas={inputDatas} serverId={serverId} />

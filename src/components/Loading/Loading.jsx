@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import * as s from './style';
 import { ClipLoader } from 'react-spinners';
-function Loading() {
 
+function Loading() {
     return (
         <div css={s.layout}>
             <div css={s.container}>

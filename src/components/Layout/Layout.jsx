@@ -2,7 +2,6 @@
 import * as s from './style';
 
 function Layout({children}) {
-
     return (
         <div css={s.layout}>
             {children}

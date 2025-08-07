@@ -29,6 +29,6 @@ export const tableStyle = css`
     }
 `;
 
-export const cusTd = (temp, limit) => css`
-  color: ${(temp > limit) ? '#EF5B25' : '#000000'}
+export const cusTd = (data, limit) => css`
+  color: ${(data > limit) ? '#EF5B25' : '#000000'}
 `;

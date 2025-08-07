@@ -5,30 +5,27 @@ import { useQuery } from '@tanstack/react-query';
 import { instance } from './apis/instance';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import IndexPage from './pages/IndexPage/IndexPage';
+import { useRecoilValue } from 'recoil';
+import { tabIdAtom } from './atoms/tabAtoms';
 
 function App() {
-  const [licenseStatus, setLicenseStatus] = useState(false);
+  const tabId = useRecoilValue(tabIdAtom);
+
+  const [licenseStatus, setLicenseStatus] = useState(true);
 
   const validLicenseKey = useQuery({
-    queryKey: ['licenseKey'],
+    queryKey: ['licenseKey', tabId],
     queryFn: () => instance.get(`/license/${localStorage.getItem('licenseKey')}`),
-    enabled: localStorage.getItem('licenseKey') !== null,
+    enabled: true,
     retry: 0,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   })
 
   useEffect(() => {
-    const licenseKey = localStorage.getItem('licenseKey')
-    if(!licenseKey) {
-      setLicenseStatus(true)
+    if (validLicenseKey?.isSuccess) {
+      setLicenseStatus(false)
     }
-  }, [])
-
-  useEffect(() => {
-    if(validLicenseKey.isError) {
-      setLicenseStatus(true)
-    }
-  }, [validLicenseKey.isError])
+  }, [validLicenseKey])
 
   return (
     <>
@@ -36,7 +33,7 @@ function App() {
       {
         licenseStatus
           ?
-          <RegisterPage setLicenseStatus={setLicenseStatus}/>
+          <RegisterPage setLicenseStatus={setLicenseStatus} />
           :
           <IndexPage />
       }
