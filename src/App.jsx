@@ -23,7 +23,13 @@ function App() {
 
   useEffect(() => {
     if (validLicenseKey?.isSuccess) {
-      setLicenseStatus(false)
+      setLicenseStatus(false);
+      return;
+    }
+
+    if(validLicenseKey?.isError) {
+      setLicenseStatus(true);
+      return;
     }
   }, [validLicenseKey])
 

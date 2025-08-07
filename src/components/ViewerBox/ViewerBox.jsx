@@ -123,7 +123,7 @@ function STLModel({ url, data, min, max }) {
                 !!data && isHovered &&
                 <Html position={[0, geometry.boundingBox.max.y, 0]} center>
                     <div css={s.infoBox(data, max)}>
-                        <p>온도: {data}</p>
+                        <p>Temperature: {data}</p>
                     </div>
                 </Html>
             }
