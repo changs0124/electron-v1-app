@@ -65,9 +65,9 @@ function STLModel({ url, data, min, max }) {
     const meshRef = useRef();
     const geometry = useLoader(STLLoader, url);
     const tempGeo = useMemo(() => geometry.center(), [geometry]);
-
+    console.log(geometry)
     const [isHovered, setIsHovered] = useState(false);
-    
+
     // 목표 uColorMixFactor를 저장하기 위한 State
     const [targetMixFactor, setTargetMixFactor] = useState(0.00);
 
@@ -104,15 +104,15 @@ function STLModel({ url, data, min, max }) {
     });
 
     return (
-        <mesh 
-            ref={meshRef} 
-            geometry={tempGeo} 
-            scale={[0.5, 0.5, 0.5]} 
-            onPointerOver={() => setIsHovered(true)} 
+        <mesh
+            ref={meshRef}
+            geometry={tempGeo}
+            scale={[0.5, 0.5, 0.5]}
+            onPointerOver={() => setIsHovered(true)}
             onPointerOut={() => setIsHovered(false)}
         >
             <shaderMaterial
-                attach="material"
+                attach='material'
                 args={[{
                     uniforms: shaderUniforms,
                     vertexShader: vertexShader,
@@ -139,29 +139,45 @@ function ViewerBox() {
     const [coilUrl, setCoilUrl] = useRecoilState(coilUrlAtom(tabId));
     const [selectedCoreStl, setSelectedCoreStl] = useRecoilState(selectedCoreStlAtom(tabId));
     const [coreUrl, setCoreUrl] = useRecoilState(coreUrlAtom(tabId));
-
+ 
     useEffect(() => {
-        if (selectedCoilStl?.success) {
-            const getStlUrl = async () => {
-                const fileBuffer = await window.electronAPI.renderStl(selectedCoilStl?.filePath);
-                const blob = new Blob([fileBuffer], { type: "model/stl" });
-                setCoilUrl(URL.createObjectURL(blob));
-            }
+        if (!selectedCoilStl?.filePath) return;
 
-            getStlUrl();
+        const checkAndLoad = async () => {
+            const res = await window.electronAPI.checkFileExists(selectedCoilStl.filePath);
+
+            if (res?.success && res?.exists) {
+                const fileBuffer = await window.electronAPI.renderStl(selectedCoilStl?.filePath);
+                const blob = new Blob([fileBuffer], { type: 'model/stl' });
+                setCoilUrl(URL.createObjectURL(blob));
+            } else {
+                setCoilUrl('');
+                setSelectedCoilStl({})
+                window.electronAPI.showAlert(res?.error);
+            }
         }
+
+        checkAndLoad();
     }, [selectedCoilStl]);
 
     useEffect(() => {
-        if (selectedCoreStl?.success) {
-            const getStlUrl = async () => {
-                const fileBuffer = await window.electronAPI.renderStl(selectedCoreStl?.filePath);
-                const blob = new Blob([fileBuffer], { type: "model/stl" });
-                setCoreUrl(URL.createObjectURL(blob));
-            }
+        if (!selectedCoreStl?.filePath) return;
 
-            getStlUrl();
+        const checkAndLoad = async () => {
+            const res = await window.electronAPI.checkFileExists(selectedCoreStl.filePath);
+
+            if (res?.success && res?.exists) {
+                const fileBuffer = await window.electronAPI.renderStl(selectedCoreStl?.filePath);
+                const blob = new Blob([fileBuffer], { type: 'model/stl' });
+                setCoreUrl(URL.createObjectURL(blob));
+            } else {
+                setCoreUrl('');
+                setSelectedCoreStl({});
+                window.electronAPI.showAlert(res?.error);
+            }
         }
+
+        checkAndLoad();
     }, [selectedCoreStl])
 
 
@@ -180,7 +196,7 @@ function ViewerBox() {
             <p css={s.titleBox}>VIEWER</p>
             <div css={s.container}>
                 {
-                    (coilUrl === "" || coreUrl === "")
+                    (coilUrl === '' || coreUrl === '')
                         ?
                         <>
                             <div css={s.selectBox} onClick={() => handleSelectStlOnClick(setSelectedCoilStl)}>{selectedCoilStl?.fileName || 'COIL'}</div>
@@ -191,7 +207,7 @@ function ViewerBox() {
                         </>
                         :
                         <Canvas shadows style={{ borderEndStartRadius: 5, borderEndEndRadius: 5 }} camera={{ position: [0, 0, 100], fov: 45 }}>
-                            <color attach="background" args={['#dbdbdb']} />
+                            <color attach='background' args={['#dbdbdb']} />
 
                             <axesHelper args={[50]} />
                             {/* 조명 */}

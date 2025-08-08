@@ -167,7 +167,6 @@ ipcMain.handle('select-stl', async () => {
 ipcMain.handle('render-stl', async (event, filePath) => {
     try {
         const fileBuffer = fs.readFileSync(filePath);
-
         return fileBuffer;
     } catch (e) {
         return { success: false, error: e.message };
@@ -184,4 +183,13 @@ ipcMain.handle('showAlert', async (event, message) => {
 
     const result = await dialog.showMessageBox(mainWindow, options);
     return result.response;
+});
+
+ipcMain.handle('check-file-exists', async (event, filePath) => {
+    const exists = fs.existsSync(filePath);
+    if (exists) {
+        return { success: true, exists };
+    } else {
+        return { success: false, error: 'The file does not exist.' };
+    }
 });
