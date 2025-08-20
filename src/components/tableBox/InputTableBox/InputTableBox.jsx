@@ -1,7 +1,19 @@
 /** @jsxImportSource @emotion/react */
+import { useEffect, useRef } from 'react';
 import * as s from './style';
 
 function InputTableBox({ parameter, serverId, inputData, setInputData, inputDatas }) {
+    const latestRowRef = useRef(null);
+
+    useEffect(() => {
+        if (!!inputDatas?.length && latestRowRef.current) {
+            // 최신 행으로 부드럽게 스크롤 이동
+            latestRowRef.current.scrollIntoView({
+                behavior: 'smooth', // 부드러운 스크롤 효과
+                block: 'end'        // 뷰포트의 아래쪽에 맞춤
+            });
+        }
+    }, [inputDatas]);
 
     const handleInputDataOnChange = (e) => {
         setInputData(prev => ({
@@ -27,7 +39,11 @@ function InputTableBox({ parameter, serverId, inputData, setInputData, inputData
                     <tbody>
                         {
                             inputDatas?.map((data, idx) => (
-                                <tr key={idx}>
+                                <tr key={idx}
+                                    ref={idx === inputDatas?.length - 1 ? latestRowRef : null}
+                                    css={s.cusTr(idx, inputDatas?.length - 1)}
+                                 
+                                >
                                     {
                                         parameter?.map((param, idx) => (
                                             <td key={idx}>{data[param?.key]}</td>
@@ -40,14 +56,14 @@ function InputTableBox({ parameter, serverId, inputData, setInputData, inputData
                 </table>
             }
             {
-                serverId === 2  &&
+                serverId === 2 &&
                 <table css={s.tableStyle}>
                     <tbody>
                         {
                             parameter?.map((param, idx) => (
                                 <tr key={idx}>
                                     <th>{param?.name}</th>
-                                    <td><input name={param?.key} type='text' value={inputData[param?.key]} onChange={handleInputDataOnChange} autoFocus={true}/></td>
+                                    <td><input name={param?.key} type='text' value={inputData[param?.key]} onChange={handleInputDataOnChange} autoFocus={true} /></td>
                                 </tr>
                             ))
                         }

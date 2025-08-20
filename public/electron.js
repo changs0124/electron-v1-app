@@ -81,7 +81,7 @@ ipcMain.handle('save-csv', async (event, jsonArray) => {
     if (!Array.isArray(jsonArray) || jsonArray.length === 0) return { success: false, error: 'Invalid or empty data' };
 
     const headers = Object.keys(jsonArray[0]);
-    const rows = jsonArray.map(obj => headers.map(key => obj[key]));
+    const rows = jsonArray.map(obj => headers.map(key => obj[key]?.data));
 
     // CSV 문자열 생성 (Excel 호환: UTF-8 BOM 추가)
     const csvContent = '\uFEFF' + [headers, ...rows].map(row => row.join(',')).join('\n');

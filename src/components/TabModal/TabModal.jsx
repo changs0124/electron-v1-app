@@ -7,22 +7,25 @@ import { v4 as uuidv4 } from 'uuid';
 import { tabStatusAtom } from '../../atoms/statusAtoms';
 
 function TabModal() {
+    const setTabStatus = useSetRecoilState(tabStatusAtom);
 
-    const addTab = useRecoilCallback(({ set }) =>
+    const handleAddTabOnClick = useRecoilCallback(({ set }) =>
         (serverId) => {
             const id = uuidv4();
 
-            set(tabsAtom, prev => [
-                ...prev,
-                { id, title: `Tab ${prev.length + 1}`, serverId }
-            ]);
+            set(tabsAtom, prev => {
+                const safePrev = Array.isArray(prev) ? prev : [];
+
+                return [
+                    ...safePrev,
+                    { id, title: `Tab ${safePrev.length + 1}`, serverId }
+                ];
+            });
             set(tabIdAtom, id);
             set(serverIdAtom(id), serverId);
             set(tabStatusAtom, false);
         }
     )
-    
-    const setTabStatus = useSetRecoilState(tabStatusAtom);
 
     return (
         <div css={s.layout}>
@@ -34,8 +37,8 @@ function TabModal() {
                     </div>
                 </div>
                 <div css={s.selectBox}>
-                    <div css={s.selectItem} onClick={() => addTab(1)}>ROM</div>
-                    <div css={s.selectItem} onClick={() => addTab(2)}>ROM & PINN</div>
+                    <div css={s.selectItem} onClick={() => handleAddTabOnClick(1)}>ROM</div>
+                    <div css={s.selectItem} onClick={() => handleAddTabOnClick(2)}>ROM & PINN</div>
                 </div>
             </div>
         </div>

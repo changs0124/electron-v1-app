@@ -18,24 +18,73 @@ export const layout = css`
 export const titleBox = css`
     box-sizing: border-box;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     border-bottom: 2px solid #dbdbdb;
     padding-left: 10px;
     padding-bottom: 5px;
     width: 100%;
-    height: 10%;
-    color: #333333;
-    font-size: 20px;
-    font-weight: 600;
+    min-height: 10%;
+
+    & > p {
+        color: #333333;
+        font-size: 20px;
+        font-weight: 600;
+    }
+`;
+
+export const iconBox = css`
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    cursor: pointer;
+
+    & > svg {
+        color: #666666;
+        font-size: 30px;
+
+        :hover {
+            color: #EF5B25;
+        }
+    }
 `;
 
 export const container = css`
     box-sizing: border-box;
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
+`;
+
+export const buttonBox = css`
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100%;
+    background-color: transparent;
+    z-index: 99;
+    
+    & > button {
+        font-size: 13px;
+
+        :disabled {
+            color: #666666;
+            background-color: transparent;
+            border-bottom: 1px solid #666666;
+        }
+    }
+
+    & > button:nth-last-of-type(1) {
+        position: absolute;
+        right: 0;
+    }
 `;
 
 export const selectBox = css`

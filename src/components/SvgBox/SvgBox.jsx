@@ -15,7 +15,7 @@ function SvgBox() {
 
     const setOutputDatas = useSetRecoilState(outPutDatasAtom(tabId));
     
-    const predictSOC = useMutation({
+    const processSOC = useMutation({
         mutationFn: () => exeInstance(serverInfo?.port).post('/process', inputData),
         onSuccess: async (res) => {
             setOutputDatas(prev => [...prev, res?.data]);
@@ -27,7 +27,7 @@ function SvgBox() {
     });
 
     return (
-        <div css={s.layout} onClick={serverId === 2 ? () => predictSOC.mutateAsync().catch(() => { }) : () => { }}>
+        <div css={s.layout} onClick={serverId === 2 ? () => processSOC.mutateAsync().catch(() => { }) : () => { }}>
             <IoIosArrowForward />
         </div>
     );

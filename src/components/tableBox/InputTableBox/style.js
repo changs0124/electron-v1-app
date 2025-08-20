@@ -44,3 +44,7 @@ export const tableStyle = css`
       cursor: pointer;
     }
 `;
+
+export const cusTr = (idx, len) => css`
+  background-color: ${idx === len ? '#eeeeee' : 'transparent'};
+`;

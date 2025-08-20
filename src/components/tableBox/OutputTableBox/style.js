@@ -29,6 +29,10 @@ export const tableStyle = css`
     }
 `;
 
-export const cusTd = (data, limit) => css`
-  color: ${(data > limit) ? '#EF5B25' : '#000000'}
+export const cusTr = (idx, len) => css`
+  background-color: ${idx === len ? '#eeeeee' : 'transparent'};
+`;
+
+export const cusTd = (data, max) => css`
+  color: ${(data > max) ? '#EF5B25' : '#000000'}
 `;

@@ -9,7 +9,7 @@ import TabModal from '../../components/TabModal/TabModal';
 import Loading from '../../components/Loading/Loading';
 import { tabStatusAtom } from '../../atoms/statusAtoms';
 import { ToastContainer } from 'react-toastify';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { serverInfoAtom } from '../../atoms/dataAtoms';
 import { exeInstance } from '../../apis/instance';
 import { useEffect, useState } from 'react';
@@ -20,6 +20,8 @@ import GraphBox from '../../components/GraphBox/GraphBox';
 import ViewerBox from '../../components/ViewerBox/ViewerBox';
 
 function IndexPage() {
+    const queryClient = useQueryClient();
+
     const tabs = useRecoilValue(tabsAtom);
     const tabId = useRecoilValue(tabIdAtom);
     const tabStatus = useRecoilValue(tabStatusAtom);
@@ -39,17 +41,18 @@ function IndexPage() {
     });
 
     useEffect(() => {
-        if (info?.isError && info.errorUpdateCount > 9) {
+        if (info?.isError && info?.errorUpdateCount > 9) {
             window.electronAPI.showAlert('Exe execution failed');
             setIsQueryEnabled(false);
             setServerInfo({
                 id: '',
                 port: 0
             });
+            queryClient.removeQueries({queryKey: ['info', serverInfo]})
             return;
         }
 
-        if (info?.isPending || (info?.isError && info.errorUpdateCount <= 9)) {
+        if (info?.isPending || (info?.isError && info?.errorUpdateCount <= 9)) {
             setIsQueryEnabled(true);
             return;
         }
@@ -85,7 +88,7 @@ function IndexPage() {
                             <GraphBox graphInfo={info?.data?.graph} />
                             {
                                 serverId === 1 &&
-                                <ViewerBox />
+                                <ViewerBox info={info}/>
                             }
                         </div>
                     </>

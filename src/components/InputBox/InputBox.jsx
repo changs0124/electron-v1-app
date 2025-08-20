@@ -51,11 +51,11 @@ function InputBox({ info }) {
                 info?.data?.tableHeader?.forEach(header => {
                     const data = res?.data[header];
 
-                    if (data && data?.data > data?.limit) {
-                        toast.error(`${header} : ${(data.data - data.limit).toFixed(2)} 초과`,
+                    if (data && data?.data > data?.max) {
+                        toast.error(`${header} : ${(data?.data - data?.max).toFixed(2)} 초과`,
                             {
                                 position: "bottom-right", // 알림 위치 (선택 사항)
-                                autoClose: 3000, // 5초 후 자동 닫힘 (선택 사항)
+                                autoClose: 3000, // 3초 후 자동 닫힘 (선택 사항)
                                 hideProgressBar: false, // 진행 바 표시 여부 (선택 사항)
                                 closeOnClick: true, // 클릭 시 닫힘 여부 (선택 사항)
                                 pauseOnHover: true, // 호버 시 일시 정지 여부 (선택 사항)

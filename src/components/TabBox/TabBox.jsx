@@ -1,31 +1,55 @@
 /** @jsxImportSource @emotion/react */
 import * as s from './style';
-import { useRecoilCallback } from 'recoil';
+import { useRecoilCallback, useRecoilState, useSetRecoilState } from 'recoil';
 import { IoIosClose } from "react-icons/io";
-import { coilUrlAtom, coreUrlAtom, inputDataAtom, outPutDatasAtom, selectedCoilStlAtom, selectedCoreStlAtom, serverInfoAtom } from '../../atoms/dataAtoms';
-import { tabsAtom } from '../../atoms/tabAtoms';
+import { indexAtom, inputDataAtom, inputDatasAtom, outPutDatasAtom, serverInfoAtom } from '../../atoms/dataAtoms';
+import { serverIdAtom, tabIdAtom, tabsAtom } from '../../atoms/tabAtoms';
+import { inputStatusAtom, tabStatusAtom } from '../../atoms/statusAtoms';
 
-function TabBox({ tab, tabId, setTabId }) {
-    
+function TabBox({ tab }) {
+    const [tabId, setTabId] = useRecoilState(tabIdAtom);
+
+    const setTabStatus = useSetRecoilState(tabStatusAtom);
+
     const handleSelectTabOnClick = (data) => {
         setTabId(data?.id);
     }
 
-    const handleDeleteTabOnClick = useRecoilCallback(({set, reset}) => (data) => {
-        reset(inputDataAtom(tabId));
-        reset(outPutDatasAtom(tabId));
-        reset(selectedCoilStlAtom(tabId));
-        reset(coilUrlAtom(tabId));
-        reset(selectedCoreStlAtom(tabId));
-        reset(coreUrlAtom(tabId));
-        reset(serverInfoAtom(tabId));
+    const handleDeleteTabOnClick = useRecoilCallback(({ set, reset }) => (data) => {
+        reset(inputDataAtom(data?.id));
+        reset(inputDatasAtom(data?.id));
+        reset(outPutDatasAtom(data?.id));
+        reset(serverInfoAtom(data?.id));
+        reset(indexAtom(data?.id));
+        reset(inputStatusAtom(data?.id));
+        reset(serverIdAtom(data?.id));
 
-        set(tabsAtom, prev => prev.filter(tab => tab?.id !== data?.id));
+        set(tabsAtom, prev => {
+            const tempTabs = prev.filter(tab => tab?.id !== data?.id);
+
+            if (data?.id === tabId) {
+                if (tempTabs?.length > 0) {
+                    setTabId(tempTabs[tempTabs?.length - 1].id);
+                } else {
+                    setTabStatus(true);
+                }
+            }
+
+            return tempTabs;
+        });
     });
 
     return (
         <div css={s.layout(tab?.id, tabId)} onClick={() => handleSelectTabOnClick(tab)}>
-            <div css={s.deleteBox(tab?.id, tabId)} onClick={() => handleDeleteTabOnClick(tab)}><IoIosClose /></div>
+            <div
+                css={s.deleteBox(tab?.id, tabId)}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteTabOnClick(tab)
+                }}
+            >
+                <IoIosClose />
+            </div>
             <p>{tab?.title}</p>
         </div>
     );

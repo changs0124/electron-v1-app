@@ -41,30 +41,9 @@ export const indexAtom = atomFamily({
     effects_UNSTABLE: [persistAtom]
 })
 
-// Coil-Stl
-export const selectedCoilStlAtom = atomFamily({
-    key: 'selectedCoilStlAtom',
-    default: {},
-    effects_UNSTABLE: [persistAtom]
-})
-
-// Coil-Stl > Buffer
-export const coilUrlAtom = atomFamily({
-    key: 'coilUrlAtom',
-    default: "",
-    effects_UNSTABLE: [persistAtom]
-})
-
-// Core-Stl
-export const selectedCoreStlAtom = atomFamily({
-    key: 'selectedCoreStlAtom',
-    default: {},
-    effects_UNSTABLE: [persistAtom]
-})
-
-// Core-Stl > Buffer
-export const coreUrlAtom = atomFamily({
-    key: 'coreUrlAtom',
-    default: "",
+// stlLoader - 선택한 .stl 파일의 객체를 담을 배열
+export const stlListAtom = atomFamily({
+    key: 'stlListAtom',
+    default: [],
     effects_UNSTABLE: [persistAtom]
 })

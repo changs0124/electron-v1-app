@@ -34,7 +34,6 @@ export const iconBox = css`
     display: flex;
     align-items: center;
     width: fit-content;
-    height: fit-content;
     cursor: pointer;
 
     & > svg {

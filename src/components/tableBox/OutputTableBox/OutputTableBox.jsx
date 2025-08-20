@@ -1,7 +1,19 @@
 /** @jsxImportSource @emotion/react */
+import { useEffect, useRef } from 'react';
 import * as s from './style';
 
 function OutputTableBox({ tableHeader, outputDatas }) {
+    const latestRowRef = useRef(null);
+
+    useEffect(() => {
+        if (!!outputDatas?.length && latestRowRef.current) {
+            // 최신 행으로 부드럽게 스크롤 이동
+            latestRowRef.current.scrollIntoView({
+                behavior: 'smooth', // 부드러운 스크롤 효과
+                block: 'end'        // 뷰포트의 아래쪽에 맞춤
+            });
+        }
+    }, [outputDatas]);
 
     return (
         <div css={s.layout}>
@@ -20,10 +32,14 @@ function OutputTableBox({ tableHeader, outputDatas }) {
                     <tbody>
                         {
                             outputDatas?.map((data, idx) => (
-                                <tr key={idx}>
+                                <tr
+                                    key={idx}
+                                    ref={idx === outputDatas.length - 1 ? latestRowRef : null}
+                                    css={s.cusTr(idx,  outputDatas.length - 1)}
+                                >
                                     {
-                                        tableHeader?.map((header, idx) => (
-                                            <td key={idx} css={s.cusTd(data[header]?.data, data[header]?.limit)}>{data[header]?.data}</td>
+                                        tableHeader?.map((header, colIdx) => (
+                                            <td key={colIdx} css={s.cusTd(data[header]?.data, data[header]?.max)}>{(data[header]?.data).toFixed(2)}</td>
                                         ))
                                     }
                                 </tr>
