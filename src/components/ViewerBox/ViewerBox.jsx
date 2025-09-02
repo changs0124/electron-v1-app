@@ -49,13 +49,14 @@ function ViewerBox({ info }) {
         const obj = selectedId ? itemRefs.current[selectedId] : null;
         if (obj) {
             raf = requestAnimationFrame(() => { // 상태가 연쇄적으로 바뀔 때 attach 호출 시 오류 발생 방지
-                obj.updateWorldMatrix?.(true, true);
-                tc.attach(obj); // 3D 오브젝트에 조작 핸들(gizmo)를 붙임
+                obj.updateWorldMatrix?.(true, true); // 상태가 연쇄적으로 바뀔 때 attach 호출 시 오류 발생 방지
+                tc.attach(obj); // 3D 오브젝트에 조작 핸들(gizmo)를 연결
                 tc.setMode?.(tcMode); // 모드 세팅 ('translate' | 'rotate' | 'scale')
             });
         } else {
-            tc.detach(); // 3D 오브젝트에 조작 핸들(gizmo)를 붙임
+            tc.detach(); // 3D 오브젝트에 조작 핸들(gizmo)를 해제
         }
+
         return () => raf && cancelAnimationFrame(raf);
     }, [selectedId, tcMode, stlList]);
 
@@ -63,10 +64,12 @@ function ViewerBox({ info }) {
     useEffect(() => {
         const tc = tcRef.current;
         if (!tc) return;
+
         const handler = (e) => {
             if (orbitRef.current) orbitRef.current.enabled = !e.value; // e.value=true → 드래그 중
         };
         tc.addEventListener('dragging-changed', handler);
+
         return () => tc.removeEventListener('dragging-changed', handler);
     }, []);
 
